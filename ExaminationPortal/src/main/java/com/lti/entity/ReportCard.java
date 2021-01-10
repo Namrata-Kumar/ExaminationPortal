@@ -101,5 +101,4 @@ public class ReportCard {
 		this.level3Score = level3Score;
 	}
 	
-
 }
