@@ -17,15 +17,15 @@ public class ExamServiceImpl implements ExamService {
 	ExamRepository examRepository;
 	
 	@Override
-	public boolean isValidAdmin() {
+	public boolean isValidAdmin(long adminId,String adminPassword) {
 		
-		return false;
+		return examRepository.isValidAdmin(adminId, adminPassword);
 	}
 
 	@Override
-	public boolean isValidUser() {
+	public boolean isValidUser(long userId,String userPassword) {
 		
-		return false;
+		return examRepository.isValidUser(userId, userPassword);
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,15 +19,16 @@ public class ExamController {
 
 	@Autowired
 	ExamService examService;
+    
+	@GetMapping("/isValidAdmin/{adminId}/{adminPass}")
+	public boolean isValidAdmin(@PathVariable("adminId") long adminId,@PathVariable("adminPass") String adminPassword) {
 
-	public boolean isValidAdmin() {
-
-		return false;
+		return examService.isValidAdmin(adminId, adminPassword);
 	}
-
-	public boolean isValidUser() {
-		// TODO Auto-generated method stub
-		return false;
+	@GetMapping("/isValidUser/{userId}/{userPass}")
+	public boolean isValidUser(@PathVariable("userId") long userId,@PathVariable("userPass") String userPassword) {
+		
+		return examService.isValidUser(userId, userPassword);
 	}
 
 	@PostMapping(value="/register")

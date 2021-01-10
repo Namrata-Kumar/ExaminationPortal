@@ -1,4 +1,4 @@
-package com.lti.repository;
+ package com.lti.repository;
 
 import java.util.List;
 
@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
 
+import com.lti.entity.AdminLoginDetails;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
 import com.lti.entity.UserRegistration;
@@ -19,15 +20,39 @@ public class ExamRepositoryImpl implements ExamRepository {
 	EntityManager em;
 	
 	@Transactional
-	public boolean isValidAdmin() {
+	public boolean isValidAdmin(long adminId,String adminPassword) {
+		try {
+			AdminLoginDetails admin = em.find(AdminLoginDetails.class,adminId);
+			if (admin.getAdminPassword().equals(adminPassword)) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			return false;
+		}
 		
-		return false;
 	}
 
 	@Transactional
-	public boolean isValidUser() {
+	public boolean isValidUser(long userId,String userPassword) {
+		try {
+			UserRegistration user = em.find(UserRegistration.class,userId);
+			if (user.getUserPassword().equals(userPassword)) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			return false;
+		}
 		
-		return false;
 	}
 
 	@Transactional
@@ -90,7 +115,6 @@ public class ExamRepositoryImpl implements ExamRepository {
 		
 		return null;
 	}
-
 
 
 }

@@ -8,9 +8,9 @@ import com.lti.entity.UserRegistration;
 
 public interface ExamRepository {
 
-	public boolean isValidAdmin();
+	public boolean isValidAdmin(long adminId,String adminPassword);
 
-	public boolean isValidUser();
+	public boolean isValidUser(long userId,String userPassword);
 
 	public UserRegistration registerUser(UserRegistration user);
 
