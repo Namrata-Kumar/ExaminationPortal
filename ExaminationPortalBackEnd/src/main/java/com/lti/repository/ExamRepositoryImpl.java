@@ -45,15 +45,15 @@ public class ExamRepositoryImpl implements ExamRepository {
 
 	@Transactional
 	public List<Question> fetchExamQuestions() {
-		String sql="select q from Question q";
+		String sql = "select q from Question q";
 		try {
 			TypedQuery<Question> query = em.createQuery(sql, Question.class);
-			List<Question> question=query.getResultList();
+			List<Question> question = query.getResultList();
 			return question;
-		}catch(Exception e) {
+		} catch (Exception e) {
 			return null;
 		}
-		
+
 	}
 
 	@Transactional
@@ -63,7 +63,7 @@ public class ExamRepositoryImpl implements ExamRepository {
 	}
 
 	@Transactional
-	public int displayScoreByLevelandId(int complexityLevel,long userId,long courseId) {
+	public int displayScoreByLevelandId(int complexityLevel, long userId, long courseId) {
 		return 0;
 	}
 
@@ -76,27 +76,38 @@ public class ExamRepositoryImpl implements ExamRepository {
 
 	@Transactional
 	public long removeQuestion(long questionId) {
-		Question question=em.find(Question.class, questionId);
+		Question question = em.find(Question.class, questionId);
 		em.remove(question);
 		return question.getQuestionId();
 	}
 
 	@Transactional
 	public List<ReportCard> viewAllReportCards() {
-
-		return null;
+		String sql = "select r from ReportCard r";
+		try {
+			TypedQuery<ReportCard> query = em.createQuery(sql, ReportCard.class);
+			return query.getResultList();
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	@Transactional
 	public List<UserRegistration> findUsersByDetails(long courseId, int currentLevel) {
-
-		return null;
+		
+			return null;
+		
 	}
 
 	@Transactional
 	public List<UserRegistration> viewAllUsers() {
-
-		return null;
+		String sql = "select u from UserRegistration u";
+		try {
+			TypedQuery<UserRegistration> query = em.createQuery(sql, UserRegistration.class);
+			return query.getResultList();
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 }

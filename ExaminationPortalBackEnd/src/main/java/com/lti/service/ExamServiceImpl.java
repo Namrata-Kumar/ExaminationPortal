@@ -70,20 +70,21 @@ public class ExamServiceImpl implements ExamService {
 
 	@Override
 	public List<ReportCard> viewAllReportCards() {
-
-		return null;
+		return examRepository.viewAllReportCards();
 	}
 
-	@Override
-	public List<UserRegistration> findUsersByDetails(long courseId, int currentLevel) {
-
-		return null;
-	}
+	
+	  @Override public List<UserRegistration> findUsersByDetails(long courseId, int
+	  currentLevel) {
+	  
+	  return null;
+	  }
+	 
 
 	@Override
 	public List<UserRegistration> viewAllUsers() {
-
-		return null;
+		
+		return examRepository.viewAllUsers();
 	}
 
 }
