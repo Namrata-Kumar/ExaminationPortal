@@ -15,16 +15,16 @@ public class ExamServiceImpl implements ExamService {
 
 	@Autowired
 	ExamRepository examRepository;
-	
+
 	@Override
 	public boolean isValidAdmin() {
-		
+
 		return false;
 	}
 
 	@Override
 	public boolean isValidUser() {
-		
+
 		return false;
 	}
 
@@ -35,55 +35,55 @@ public class ExamServiceImpl implements ExamService {
 
 	@Override
 	public void updatePassword() {
-		
 
 	}
 
 	@Override
 	public List<Question> fetchExamQuestions() {
-		
+
 		return null;
 	}
 
 	@Override
 	public long updateReportCard() {
-		
+
 		return 0;
 	}
 
 	@Override
 	public int displayScoreBycurrentLevelandId() {
-		
+
 		return 0;
 	}
 
 	@Override
-	public long addQuestion() {
-		
-		return 0;
+	public long addQuestion(Question question) {
+
+		return examRepository.addQuestion(question);
+
 	}
 
 	@Override
-	public long removeQuestion() {
-		
-		return 0;
+	public long removeQuestion(long questionId) {
+
+		return examRepository.removeQuestion(questionId);
 	}
 
 	@Override
 	public List<ReportCard> viewAllReportCards() {
-		
+
 		return null;
 	}
 
 	@Override
 	public List<UserRegistration> findUsersByDetails(long courseId, int currentLevel) {
-		
+
 		return null;
 	}
 
 	@Override
 	public List<UserRegistration> viewAllUsers() {
-		
+
 		return null;
 	}
 

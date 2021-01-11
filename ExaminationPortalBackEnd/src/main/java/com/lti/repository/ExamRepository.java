@@ -22,9 +22,9 @@ public interface ExamRepository {
 
 	public int displayScoreBycurrentLevelandId();
 
-	public long addQuestion();
+	public long addQuestion(Question question);
 
-	public long removeQuestion();
+	public long removeQuestion(long questionId);
 
 	public List<ReportCard> viewAllReportCards();
 

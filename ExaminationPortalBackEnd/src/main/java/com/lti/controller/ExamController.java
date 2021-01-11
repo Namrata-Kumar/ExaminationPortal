@@ -3,9 +3,11 @@ package com.lti.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lti.entity.Question;
@@ -54,14 +56,16 @@ public class ExamController {
 		return 0;
 	}
 
-	public long addQuestion() {
-		// TODO Auto-generated method stub
-		return 0;
+	@PostMapping(value="/addQuestion")
+	public long addQuestion(@RequestBody Question question) {
+		return examService.addQuestion(question);
 	}
 
-	public long removeQuestion() {
-		// TODO Auto-generated method stub
-		return 0;
+	@PostMapping(value="/removeQuestion",consumes = { MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_VALUE })
+	public long removeQuestion(@RequestParam("questionId") long questionId) {
+		return examService.removeQuestion(questionId);
+
 	}
 
 	public List<ReportCard> viewAllReportCards() {
