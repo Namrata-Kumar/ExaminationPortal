@@ -51,7 +51,7 @@ public class ExamController {
 		return 0;
 	}
 
-	public int displayScoreBycurrentLevelandId() {
+	public int displayScoreByLevelandId(int complexityLevel,long userId,long courseId) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

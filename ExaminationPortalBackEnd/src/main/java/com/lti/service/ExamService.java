@@ -20,7 +20,7 @@ public interface ExamService {
 
 	public long updateReportCard();
 
-	public int displayScoreBycurrentLevelandId();
+	public int displayScoreByLevelandId(int complexityLevel,long userId,long courseId);
 
 	public long addQuestion(Question question);
 

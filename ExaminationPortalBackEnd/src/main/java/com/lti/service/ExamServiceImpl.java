@@ -51,7 +51,7 @@ public class ExamServiceImpl implements ExamService {
 	}
 
 	@Override
-	public int displayScoreBycurrentLevelandId() {
+	public int displayScoreByLevelandId(int complexityLevel,long userId,long courseId) {
 
 		return 0;
 	}
