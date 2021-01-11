@@ -20,11 +20,11 @@ public interface ExamRepository {
 
 	public long updateReportCard();
 
-	public int displayScoreBycurrentLevelandId();
+	public int displayScoreByLevelandId(int complexityLevel,long userId,long courseId);
 
-	public long addQuestion();
+	public long addQuestion(Question question);
 
-	public long removeQuestion();
+	public long removeQuestion(long questionId);
 
 	public List<ReportCard> viewAllReportCards();
 
