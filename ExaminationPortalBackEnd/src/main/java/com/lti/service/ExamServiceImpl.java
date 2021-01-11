@@ -33,8 +33,8 @@ public class ExamServiceImpl implements ExamService {
 		return examRepository.registerUser(user);
 	}
 
-	@Override
-	public void updatePassword() {
+	public long updatePassword(long userId, String userPassword) {
+		return examRepository.updatePassword(userId, userPassword);
 
 	}
 

@@ -14,7 +14,7 @@ public interface ExamService {
 
 	public UserRegistration registerUser(UserRegistration user);
 
-	public void updatePassword();
+	public long updatePassword(long userId, String userPassword);
 
 	public List<Question> fetchExamQuestions();
 

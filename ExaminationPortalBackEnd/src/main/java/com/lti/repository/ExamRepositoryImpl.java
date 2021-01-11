@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
@@ -39,7 +40,12 @@ public class ExamRepositoryImpl implements ExamRepository {
 	}
 
 	@Transactional
-	public void updatePassword() {
+	public long updatePassword(long userId, String userPassword) {
+//		UPDATE QuestionGroupText T SET T.localizedText.content = :content WHERE T.generatedId = :generatedId
+		String jpql = "UPDATE UserRegistration T SET T.userPassword = :userPassword WHERE T.userId = :userId ";
+		Query query = em.createQuery(jpql);
+//		UserRegistration newuser = query.getSingleResult();
+		return userId;
 
 	}
 

@@ -39,8 +39,10 @@ public class ExamController {
 		return examService.registerUser(user);
 	}
 
-	public void updatePassword() {
-		// TODO Auto-generated method stub
+	@PostMapping(value="/updatePassword")
+	public long updatePassword(@RequestBody long userId, String userPassword) {
+		examService.updatePassword(userId, userPassword);
+		return userId;
 
 	}
 
