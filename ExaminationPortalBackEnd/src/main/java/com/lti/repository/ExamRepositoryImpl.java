@@ -100,7 +100,7 @@ public class ExamRepositoryImpl implements ExamRepository {
 
 	@Transactional
 	public List<UserRegistration> findUsersByDetails(long courseId, int currentLevel) {
-		
+	
 			return null;
 		
 	}
