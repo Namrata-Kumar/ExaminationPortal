@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
@@ -44,8 +45,15 @@ public class ExamRepositoryImpl implements ExamRepository {
 
 	@Transactional
 	public List<Question> fetchExamQuestions() {
-
-		return null;
+		String sql="select q from Question q";
+		try {
+			TypedQuery<Question> query = em.createQuery(sql, Question.class);
+			List<Question> question=query.getResultList();
+			return question;
+		}catch(Exception e) {
+			return null;
+		}
+		
 	}
 
 	@Transactional

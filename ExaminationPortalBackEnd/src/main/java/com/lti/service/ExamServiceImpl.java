@@ -40,8 +40,7 @@ public class ExamServiceImpl implements ExamService {
 
 	@Override
 	public List<Question> fetchExamQuestions() {
-
-		return null;
+		return examRepository.fetchExamQuestions();
 	}
 
 	@Override

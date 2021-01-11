@@ -41,9 +41,9 @@ public class ExamController {
 
 	}
 
+	@GetMapping(value="/fetchExamQuestions")
 	public List<Question> fetchExamQuestions() {
-		// TODO Auto-generated method stub
-		return null;
+		return examService.fetchExamQuestions();
 	}
 
 	public long updateReportCard() {
