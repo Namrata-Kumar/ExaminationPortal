@@ -2,6 +2,7 @@ package com.lti.repository;
 
 import java.util.List;
 
+import com.lti.dto.QuestionDto;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
 import com.lti.entity.UserRegistration;
@@ -31,5 +32,6 @@ public interface ExamRepository {
 	public List<UserRegistration> findUsersByDetails(long courseId, int currentLevel);
 
 	public List<UserRegistration> viewAllUsers();
+	public ReportCard findReportBasedOnCourseAndUserId(long userId,long courseId);
 
 }

@@ -1,15 +1,17 @@
 package com.lti.repository;
 
+import java.util.ArrayList;
 import java.util.List;
+import com.lti.dto.QuestionDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
 
+import com.lti.dto.QuestionDto;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
 import com.lti.entity.UserRegistration;
@@ -41,21 +43,19 @@ public class ExamRepositoryImpl implements ExamRepository {
 
 	@Transactional
 	public long updatePassword(long userId, String userPassword) {
-//		UPDATE QuestionGroupText T SET T.localizedText.content = :content WHERE T.generatedId = :generatedId
-		String jpql = "UPDATE UserRegistration T SET T.userPassword = :userPassword WHERE T.userId = :userId ";
-		Query query = em.createQuery(jpql);
-//		UserRegistration newuser = query.getSingleResult();
-		return userId;
-
+		return 0;
 	}
 
 	@Transactional
 	public List<Question> fetchExamQuestions() {
+		QuestionDto que = new QuestionDto();
+		List<QuestionDto> questionList = new ArrayList<QuestionDto>();
 		String sql = "select q from Question q";
 		try {
 			TypedQuery<Question> query = em.createQuery(sql, Question.class);
-			List<Question> question = query.getResultList();
-			return question;
+			List<Question> questions = query.getResultList();
+			return questions;
+
 		} catch (Exception e) {
 			return null;
 		}
@@ -100,9 +100,9 @@ public class ExamRepositoryImpl implements ExamRepository {
 
 	@Transactional
 	public List<UserRegistration> findUsersByDetails(long courseId, int currentLevel) {
-	
-			return null;
-		
+
+		return null;
+
 	}
 
 	@Transactional
@@ -114,6 +114,26 @@ public class ExamRepositoryImpl implements ExamRepository {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	public ReportCard findReportBasedOnCourseAndUserId(long userId, long courseId) {
+		String sql = "select r from ReportCard r where r.userRegistration.userId=:userId and r.course.courseId=:courseId";
+		try {
+			TypedQuery<ReportCard> query = em.createQuery(sql, ReportCard.class);
+			query.setParameter("userId", userId);
+			query.setParameter("courseId", courseId);
+			//System.out.println("Hello");
+			ReportCard reportCard = query.getSingleResult();
+			System.out.println(reportCard);
+			
+			return reportCard;
+
+		} catch (Exception e) {
+			System.out.println("hello"+e.getMessage());
+			
+			return null;
+		}
+
 	}
 
 }

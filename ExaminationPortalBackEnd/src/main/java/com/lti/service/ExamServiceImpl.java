@@ -9,6 +9,7 @@ import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
 import com.lti.entity.UserRegistration;
 import com.lti.repository.ExamRepository;
+import com.lti.dto.QuestionDto;
 
 @Service
 public class ExamServiceImpl implements ExamService {
@@ -86,5 +87,10 @@ public class ExamServiceImpl implements ExamService {
 		
 		return examRepository.viewAllUsers();
 	}
+	public ReportCard findReportBasedOnCourseAndUserId(long userId,long courseId) {
+		return examRepository.findReportBasedOnCourseAndUserId(userId,courseId);
+
+	}
+
 
 }
