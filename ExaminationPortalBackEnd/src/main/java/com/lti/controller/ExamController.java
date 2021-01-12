@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lti.dto.QuestionDto;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
+import com.lti.entity.UserCredentials;
 import com.lti.entity.UserRegistration;
 import com.lti.service.ExamService;
 
@@ -28,14 +29,14 @@ public class ExamController {
 	@Autowired
 	ExamService examService;
 
-	public boolean isValidAdmin() {
-
-		return false;
+	@PostMapping("/isValidAdmin")
+	public boolean isValidAdmin(@RequestBody UserCredentials userCredentials) {
+		return examService.isValidAdmin(userCredentials.getEmail(), userCredentials.getPassword());
 	}
 
-	public boolean isValidUser() {
-		// TODO Auto-generated method stub
-		return false;
+	@PostMapping("/isValidUser")
+	public boolean isValidUser(@RequestBody UserCredentials userCredentials) {
+		return examService.isValidUser(userCredentials.getEmail(), userCredentials.getPassword());
 	}
 
 	@PostMapping(value = "/register")
@@ -78,10 +79,10 @@ public class ExamController {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
-	public int displayScoreByLevelandId(int complexityLevel, long userId, long courseId) {
-		// TODO Auto-generated method stub
-		return 0;
+	
+	@GetMapping(value = "/displayScoreByLevelandId/{examLevel}/{userId}/{courseId}")
+	public int displayScoreByLevelandId(@PathVariable("examLevel") int examLevel,@PathVariable("userId") long userId,@PathVariable("courseId") long courseId) {
+		return examService.displayScoreByLevelandId(examLevel, userId, courseId) ;
 	}
 
 	@PostMapping(value = "/addQuestion")

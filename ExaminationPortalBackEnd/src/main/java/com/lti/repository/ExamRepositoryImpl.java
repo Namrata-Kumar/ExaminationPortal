@@ -5,15 +5,18 @@ import java.util.List;
 import com.lti.dto.QuestionDto;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
 
+import com.lti.entity.AdminLoginDetails;
 import com.lti.dto.QuestionDto;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
+import com.lti.entity.UserLoginDetails;
 import com.lti.entity.UserRegistration;
 
 @Repository
@@ -23,22 +26,48 @@ public class ExamRepositoryImpl implements ExamRepository {
 	EntityManager em;
 
 	@Transactional
-	public boolean isValidAdmin() {
+	public boolean isValidAdmin(String email, String password) {
+		try {
+			String sql = "select a from AdminLoginDetails a where a.adminEmail=:adminEmail";
+			TypedQuery<AdminLoginDetails> query = em.createQuery(sql, AdminLoginDetails.class);
+			query.setParameter("adminEmail", email);
+			AdminLoginDetails existingUser = query.getSingleResult();
+			return existingUser.getAdminPassword().equals(password);
 
-		return false;
+		} catch (NoResultException noResultException) {
+			return false;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	@Transactional
-	public boolean isValidUser() {
-
-		return false;
+	public boolean isValidUser(String email, String password) {
+		try {
+			String sql = "select u from UserRegistration u where u.userEmail=:userEmail";
+			TypedQuery<UserRegistration> query = em.createQuery(sql, UserRegistration.class);
+			query.setParameter("userEmail", email);
+			UserRegistration existingUser = query.getSingleResult();
+			return existingUser.getUserPassword().equals(password);
+		} catch (NoResultException noResultException) {
+			return false;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	@Transactional
 	public UserRegistration registerUser(UserRegistration user) {
-		UserRegistration newUser = em.merge(user);
+		String sql = "select u from UserRegistration u where u.userEmail=:userEmail";
+		TypedQuery<UserRegistration> query = em.createQuery(sql, UserRegistration.class);
+		query.setParameter("userEmail", user.getUserEmail());
+		List<UserRegistration> existingUserRegistrations = query.getResultList();
+		if (existingUserRegistrations.isEmpty()) {
+			UserRegistration newUser = em.merge(user);
+			return newUser;
+		}
+		return null;
 		// return newUser.getUserId();
-		return newUser;
 	}
 
 	@Transactional
@@ -68,10 +97,20 @@ public class ExamRepositoryImpl implements ExamRepository {
 		return 0;
 	}
 
-	@Transactional
-	public int displayScoreByLevelandId(int complexityLevel, long userId, long courseId) {
-		return 0;
-	}
+	/*
+	 * @Transactional public int displayScoreByLevelandId(int examLevel, long
+	 * userId, long courseId) { String sql =
+	 * "select r from ReportCard r where r.UserRegistration.userId=:userId and r.Course.courseId=:courseId"
+	 * ; TypedQuery<ReportCard> query = em.createQuery(sql, ReportCard.class);
+	 * query.setParameter("userId", userId); query.setParameter("courseId",
+	 * courseId); ReportCard reportCard = null; try { reportCard =
+	 * query.getSingleResult();
+	 * 
+	 * } catch (NoResultException noResultException) { return 0; } catch (Exception
+	 * e) { return 0; } if (examLevel == 1) { return reportCard.getLevel1Score(); }
+	 * else if (examLevel == 2) { return reportCard.getLevel2Score(); } else if
+	 * (examLevel == 3) { return reportCard.getLevel3Score(); } return 0; }
+	 */
 
 	@Transactional
 	public long addQuestion(Question question) {
@@ -116,6 +155,7 @@ public class ExamRepositoryImpl implements ExamRepository {
 		}
 	}
 
+
 	public ReportCard findReportBasedOnCourseAndUserId(long userId, long courseId) {
 		String sql = "select r from ReportCard r where r.userRegistration.userId=:userId and r.course.courseId=:courseId";
 		try {
@@ -134,6 +174,11 @@ public class ExamRepositoryImpl implements ExamRepository {
 			return null;
 		}
 
+	}
+  @Override
+	public int displayScoreByLevelandId(int examLevel, long userId, long courseId) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

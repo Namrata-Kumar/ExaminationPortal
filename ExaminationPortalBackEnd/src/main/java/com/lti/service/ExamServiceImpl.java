@@ -18,15 +18,15 @@ public class ExamServiceImpl implements ExamService {
 	ExamRepository examRepository;
 
 	@Override
-	public boolean isValidAdmin() {
-
-		return false;
+	public boolean isValidAdmin(String email,String password) {
+		
+		return examRepository.isValidAdmin(email, password);
 	}
 
 	@Override
-	public boolean isValidUser() {
+	public boolean isValidUser(String email, String password){
 
-		return false;
+		return examRepository.isValidUser(email, password);
 	}
 
 	@Override
@@ -51,9 +51,9 @@ public class ExamServiceImpl implements ExamService {
 	}
 
 	@Override
-	public int displayScoreByLevelandId(int complexityLevel,long userId,long courseId) {
+	public int displayScoreByLevelandId(int examLevel,long userId,long courseId) {
 
-		return 0;
+		return examRepository.displayScoreByLevelandId(examLevel, userId, courseId) ;
 	}
 
 	@Override
