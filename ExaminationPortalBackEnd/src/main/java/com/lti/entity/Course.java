@@ -2,7 +2,9 @@ package com.lti.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,6 +12,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "table_courses")
@@ -21,10 +25,12 @@ public class Course {
 	long courseId;
 	String courseName;
 	
-	@OneToOne(mappedBy = "course")
-	ReportCard reportCard;
 	
-	@OneToMany(mappedBy = "course")
+	@OneToMany(mappedBy = "course",cascade = CascadeType.ALL)
+	@JsonIgnore
+	List<ReportCard> reportCard;
+	@OneToMany(mappedBy = "course",cascade = CascadeType.ALL)
+	@JsonIgnore
 	List<Question> question;
 
 	public long getCourseId() {
@@ -43,11 +49,13 @@ public class Course {
 		this.courseName = courseName;
 	}
 
-	public ReportCard getReportCard() {
+	
+
+	public List<ReportCard> getReportCard() {
 		return reportCard;
 	}
 
-	public void setReportCard(ReportCard reportCard) {
+	public void setReportCard(List<ReportCard> reportCard) {
 		this.reportCard = reportCard;
 	}
 

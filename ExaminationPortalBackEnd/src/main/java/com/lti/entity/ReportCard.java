@@ -3,6 +3,7 @@ package com.lti.entity;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,6 +13,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.ColumnDefault;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lti.dto.LevelScore;
 
 @Entity
@@ -22,17 +27,23 @@ public class ReportCard {
 	@SequenceGenerator(name = "seq_report", initialValue = 4001, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_report")
 	long reportId;
+
 	int level1Score;
+
 	int level2Score;
+
 	int level3Score;
 	int currentLevel;
+
 	int status;
 
-	@OneToOne
+	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "courseId")
 	Course course;
 
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "userId")
 	UserRegistration userRegistration;
 
@@ -44,7 +55,6 @@ public class ReportCard {
 		this.reportId = reportId;
 	}
 
-	 
 	public int getCurrentLevel() {
 		return currentLevel;
 	}
@@ -100,6 +110,5 @@ public class ReportCard {
 	public void setLevel3Score(int level3Score) {
 		this.level3Score = level3Score;
 	}
-	
 
 }

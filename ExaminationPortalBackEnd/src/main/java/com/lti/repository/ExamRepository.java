@@ -8,9 +8,9 @@ import com.lti.entity.UserRegistration;
 
 public interface ExamRepository {
 
-	public boolean isValidAdmin();
+	public boolean isValidAdmin(String email, String password);
 
-	public boolean isValidUser();
+	public boolean isValidUser(String email, String password);
 
 	public UserRegistration registerUser(UserRegistration user);
 
@@ -20,7 +20,7 @@ public interface ExamRepository {
 
 	public long updateReportCard();
 
-	public int displayScoreByLevelandId(int complexityLevel,long userId,long courseId);
+	public int displayScoreByLevelandId(int examLevel,long userId,long courseId);
 
 	public long addQuestion(Question question);
 
