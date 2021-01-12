@@ -1,40 +1,34 @@
-package com.lti.entity;
+package com.lti.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+public class QuestionDto {
 
-@Entity
-@Table(name = "table_question")
-public class Question {
-
-	@Id
-	@SequenceGenerator(name = "seq_question", initialValue = 3001, allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_question")
 	long questionId;
-	int examLevel;
 	String description;
 	String optionOne;
 	String optionTwo;
 	String optionThree;
 	String optionFour;
 	String answer;
+	long courseId;
+	int examLevel;
 
-	@ManyToOne
-	@JoinColumn(name = "courseId")
-	Course course;
-
-	public long getQuestionId() {
-		return questionId;
+	public QuestionDto(long questionId, String description, String optionOne, String optionTwo, String optionThree,
+			String optionFour, String answer, long courseId, int examLevel) {
+		super();
+		this.questionId = questionId;
+		this.description = description;
+		this.optionOne = optionOne;
+		this.optionTwo = optionTwo;
+		this.optionThree = optionThree;
+		this.optionFour = optionFour;
+		this.answer = answer;
+		this.courseId = courseId;
+		this.examLevel = examLevel;
 	}
 
-	public void setQuestionId(long questionId) {
-		this.questionId = questionId;
+	public QuestionDto() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	public int getExamLevel() {
@@ -43,6 +37,22 @@ public class Question {
 
 	public void setExamLevel(int examLevel) {
 		this.examLevel = examLevel;
+	}
+
+	public long getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(long courseId) {
+		this.courseId = courseId;
+	}
+
+	public long getQuestionId() {
+		return questionId;
+	}
+
+	public void setQuestionId(long questionId) {
+		this.questionId = questionId;
 	}
 
 	public String getDescription() {
@@ -92,14 +102,5 @@ public class Question {
 	public void setAnswer(String answer) {
 		this.answer = answer;
 	}
-
-	public Course getCourse() {
-		return course;
-	}
-
-	public void setCourse(Course course) {
-		this.course = course;
-	}
-	
 
 }
