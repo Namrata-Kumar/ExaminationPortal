@@ -2,6 +2,7 @@ package com.lti.service;
 
 import java.util.List;
 
+import com.lti.dto.QuestionDto;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
 import com.lti.entity.UserRegistration;
@@ -14,7 +15,7 @@ public interface ExamService {
 
 	public UserRegistration registerUser(UserRegistration user);
 
-	public void updatePassword();
+	public long updatePassword(long userId, String userPassword);
 
 	public List<Question> fetchExamQuestions();
 
@@ -31,5 +32,6 @@ public interface ExamService {
 	public List<UserRegistration> findUsersByDetails(long courseId, int currentLevel);
 
 	public List<UserRegistration> viewAllUsers();
+	public ReportCard findReportBasedOnCourseAndUserId(long userId,long courseId);
 
 }
