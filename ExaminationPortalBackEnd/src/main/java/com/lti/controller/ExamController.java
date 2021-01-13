@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lti.dto.QuestionDto;
 import com.lti.entity.Course;
+import com.lti.entity.ForgotPassword;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
+import com.lti.entity.ResetPassword;
 import com.lti.entity.UserCredentials;
 import com.lti.entity.UserRegistration;
 import com.lti.service.ExamService;
@@ -45,11 +47,14 @@ public class ExamController {
 		return examService.registerUser(user);
 	}
 
-	@PostMapping(value = "/updatePassword")
-	public long updatePassword(@RequestBody long userId, String userPassword) {
-		examService.updatePassword(userId, userPassword);
-		return userId;
-
+	@PostMapping(value = "/resetPassword")
+	public boolean resetPassword(@RequestBody ResetPassword resetPassword) {
+		 return examService.resetPassword(resetPassword);
+	}
+	
+	@PostMapping(value="/forgotPassword")
+	public boolean forgotPassword(@RequestBody ForgotPassword forgotPassword) {
+		return examService.forgotPassword(forgotPassword);
 	}
 
 	@GetMapping(value = "/fetchExamQuestions/{currentLevel}/{courseId}")
