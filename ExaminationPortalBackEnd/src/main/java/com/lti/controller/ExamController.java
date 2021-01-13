@@ -50,10 +50,10 @@ public class ExamController {
 
 	}
 
-	@GetMapping(value = "/fetchExamQuestions", produces = { MediaType.APPLICATION_XML_VALUE,
+	@GetMapping(value = "/fetchExamQuestions/{currentLevel}/{courseId}", produces = { MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE })
-	public List<QuestionDto> fetchExamQuestions() {
-		List<Question> questions = examService.fetchExamQuestions();
+	public List<QuestionDto> fetchExamQuestions(@PathVariable("currentLevel") int currentLevel,@PathVariable("courseId") long courseId) {
+		List<Question> questions = examService.fetchExamQuestions(currentLevel,courseId);
 		List<QuestionDto> dtoList = new ArrayList<QuestionDto>();
 		for (Question question : questions) {
 			QuestionDto dto = new QuestionDto();

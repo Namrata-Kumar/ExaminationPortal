@@ -40,8 +40,8 @@ public class ExamServiceImpl implements ExamService {
 	}
 
 	@Override
-	public List<Question> fetchExamQuestions() {
-		return examRepository.fetchExamQuestions();
+	public List<Question> fetchExamQuestions(int currentLevel,long courseId) {
+		return examRepository.fetchExamQuestions(currentLevel,courseId);
 	}
 
 	@Override

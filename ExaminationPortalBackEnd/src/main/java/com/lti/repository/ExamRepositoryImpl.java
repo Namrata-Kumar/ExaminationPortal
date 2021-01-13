@@ -46,13 +46,12 @@ public class ExamRepositoryImpl implements ExamRepository {
 		return 0;
 	}
 
-	@Transactional
-	public List<Question> fetchExamQuestions() {
-		QuestionDto que = new QuestionDto();
-		List<QuestionDto> questionList = new ArrayList<QuestionDto>();
-		String sql = "select q from Question q";
+	public List<Question> fetchExamQuestions(int examLevel, long courseId) {
+		String sql = "select q from Question q where q.examLevel=:examLevel and q.course.courseId=:courseId";
 		try {
 			TypedQuery<Question> query = em.createQuery(sql, Question.class);
+			query.setParameter("examLevel", examLevel);
+			query.setParameter("courseId", courseId);
 			List<Question> questions = query.getResultList();
 			return questions;
 
@@ -122,15 +121,15 @@ public class ExamRepositoryImpl implements ExamRepository {
 			TypedQuery<ReportCard> query = em.createQuery(sql, ReportCard.class);
 			query.setParameter("userId", userId);
 			query.setParameter("courseId", courseId);
-			//System.out.println("Hello");
+			// System.out.println("Hello");
 			ReportCard reportCard = query.getSingleResult();
 			System.out.println(reportCard);
-			
+
 			return reportCard;
 
 		} catch (Exception e) {
-			System.out.println("hello"+e.getMessage());
-			
+			System.out.println("hello" + e.getMessage());
+
 			return null;
 		}
 

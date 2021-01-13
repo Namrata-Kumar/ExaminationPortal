@@ -17,7 +17,7 @@ public interface ExamRepository {
 
 	public long updatePassword(long userId, String userPassword);
 
-	public List<Question> fetchExamQuestions();
+	public List<Question> fetchExamQuestions(int currentLevel,long courseId);
 
 	public long updateReportCard();
 
