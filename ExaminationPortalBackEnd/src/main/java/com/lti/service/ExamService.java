@@ -3,6 +3,7 @@ package com.lti.service;
 import java.util.List;
 
 import com.lti.dto.QuestionDto;
+import com.lti.entity.Course;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
 import com.lti.entity.UserRegistration;
@@ -33,5 +34,9 @@ public interface ExamService {
 
 	public List<UserRegistration> viewAllUsers();
 	public ReportCard findReportBasedOnCourseAndUserId(long userId,long courseId);
+	public long addReport(ReportCard reportCard);
+	public List<Course> fetchAllCourses();
+	
 
+	
 }

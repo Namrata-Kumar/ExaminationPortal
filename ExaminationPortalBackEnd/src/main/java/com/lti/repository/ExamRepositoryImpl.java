@@ -11,8 +11,10 @@ import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.lti.entity.AdminLoginDetails;
+import com.lti.entity.Course;
 import com.lti.dto.QuestionDto;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
@@ -117,6 +119,12 @@ public class ExamRepositoryImpl implements ExamRepository {
 		return question1.getQuestionId();
 
 	}
+	
+	@Transactional
+	public long addReport(ReportCard reportCard) {
+		  ReportCard reportCard1 = em.merge(reportCard);
+		  return reportCard1.getReportId();
+	  }
 
 	@Transactional
 	public long removeQuestion(long questionId) {
@@ -135,6 +143,19 @@ public class ExamRepositoryImpl implements ExamRepository {
 			return null;
 		}
 	}
+	
+	@Transactional
+	public List<Course> fetchAllCourses(){
+		String sql = "select c from course c";
+		try {
+			TypedQuery<Course> query = em.createQuery(sql, Course.class);
+			return query.getResultList();
+		} catch (Exception e) {
+			return null;
+		}
+		
+	}
+	
 
 	@Transactional
 	public List<UserRegistration> findUsersByDetails(long courseId, int currentLevel) {
@@ -179,5 +200,7 @@ public class ExamRepositoryImpl implements ExamRepository {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+  
+  
 
 }

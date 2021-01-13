@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lti.dto.QuestionDto;
+import com.lti.entity.Course;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
 import com.lti.entity.UserCredentials;
@@ -51,8 +52,7 @@ public class ExamController {
 
 	}
 
-	@GetMapping(value = "/fetchExamQuestions/{currentLevel}/{courseId}", produces = { MediaType.APPLICATION_XML_VALUE,
-			MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/fetchExamQuestions/{currentLevel}/{courseId}")
 	public List<QuestionDto> fetchExamQuestions(@PathVariable("currentLevel") int currentLevel,@PathVariable("courseId") long courseId) {
 		List<Question> questions = examService.fetchExamQuestions(currentLevel,courseId);
 		List<QuestionDto> dtoList = new ArrayList<QuestionDto>();
@@ -111,14 +111,22 @@ public class ExamController {
 	public List<UserRegistration> viewAllUsers() {
 		return examService.viewAllUsers();
 	}
+	
+	@GetMapping(value="/fetchAllCourses")
+	public List<Course> fetchAllCourses(){
+		return examService.fetchAllCourses();
+	}
 
-	@GetMapping(value = "/findReport/{userId}/{courseId}", produces = { MediaType.APPLICATION_XML_VALUE,
-			MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/findReport/{userId}/{courseId}")
 	public ReportCard findReportBasedOnCourseAndUserId(@PathVariable("userId") long userId,
 			@PathVariable("courseId") long courseId) {
 		ReportCard reportCard = examService.findReportBasedOnCourseAndUserId(userId, courseId);
 		return reportCard;
-
+	}
+	
+	@PostMapping(value = "/addReport")
+	public long addReport(@RequestBody ReportCard reportCard) {
+	   return examService.addReport(reportCard);
 	}
 
 }

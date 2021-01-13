@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lti.entity.Course;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
 import com.lti.entity.UserRegistration;
@@ -62,6 +63,13 @@ public class ExamServiceImpl implements ExamService {
 		return examRepository.addQuestion(question);
 
 	}
+	
+	@Override
+	public long addReport(ReportCard reportCard) {
+		  return examRepository.addReport(reportCard);
+	  }
+
+	
 
 	@Override
 	public long removeQuestion(long questionId) {
@@ -91,6 +99,10 @@ public class ExamServiceImpl implements ExamService {
 		return examRepository.findReportBasedOnCourseAndUserId(userId,courseId);
 
 	}
-
+	
+	public List<Course> fetchAllCourses(){
+		return examRepository.fetchAllCourses();
+	}
+	
 
 }
