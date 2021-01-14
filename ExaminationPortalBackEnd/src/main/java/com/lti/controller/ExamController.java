@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
 import com.lti.entity.Course;
 import com.lti.entity.ForgotPassword;
@@ -133,6 +134,11 @@ public class ExamController {
 	@PostMapping(value = "/addReport")
 	public long addReport(@RequestBody ReportCard reportCard) {
 	   return examService.addReport(reportCard);
+	}
+	
+	@PostMapping(value = "/addNewReport")
+	public long addNewReport(@RequestBody NewReport newReport) {
+		return examService.addNewReport(newReport);
 	}
 
 }
