@@ -42,9 +42,13 @@ public class ExamRepositoryImpl implements ExamRepository {
 	public boolean isValidAdmin(String email, String password) {
 		try {
 			String sql = "select a from AdminLoginDetails a where a.adminEmail=:adminEmail";
+			System.out.println("after sql");
 			TypedQuery<AdminLoginDetails> query = em.createQuery(sql, AdminLoginDetails.class);
 			query.setParameter("adminEmail", email);
+			System.out.println("after q");
 			AdminLoginDetails existingUser = query.getSingleResult();
+			System.out.println("after result"+existingUser.getAdminPassword());
+			
 			return existingUser.getAdminPassword().equals(password);
 
 		} catch (NoResultException noResultException) {
@@ -315,7 +319,7 @@ public class ExamRepositoryImpl implements ExamRepository {
 		 */
 		ReportCard reportCard1 = em.merge(reportCard);
 		return reportCard1.getReportId();
-	}
+		}
 
 
 

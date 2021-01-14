@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
 import com.lti.entity.Course;
 import com.lti.entity.ForgotPassword;
@@ -126,6 +127,14 @@ public class ExamController {
 		ReportCard reportCard = examService.findReportBasedOnCourseAndUserId(userId, courseId);
 		return reportCard;
 
+	}
+	@GetMapping(value = "/fetchAllCourses")
+	public List<Course> fetchAllCourses() {
+		return examService.fetchAllCourses();
+	}
+	@PostMapping(value = "/addNewReport")
+	public long addNewReport(@RequestBody NewReport newReport) {
+		return examService.addNewReport(newReport);
 	}
 	
 
