@@ -31,6 +31,7 @@ public class UserRegistration {
 	String userState;
 	String qualification;
 	String yearOfCompletion;
+	String forgotPasswordLink;
 	 
 	@OneToOne(mappedBy = "userRegistration",cascade = CascadeType.ALL)
 	UserLoginDetails userLoginDetails;
@@ -132,6 +133,14 @@ public class UserRegistration {
 
 	public void setReportCard(List<ReportCard> reportCard) {
 		this.reportCard = reportCard;
+	}
+
+	public String getForgotPasswordLink() {
+		return forgotPasswordLink;
+	}
+
+	public void setForgotPasswordLink(String forgotPasswordLink) {
+		this.forgotPasswordLink = forgotPasswordLink;
 	}
 	
 	

@@ -5,8 +5,10 @@ import java.util.List;
 import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
 import com.lti.entity.Course;
+import com.lti.entity.ForgotPassword;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
+import com.lti.entity.ResetPassword;
 import com.lti.entity.UserRegistration;
 
 public interface ExamService {
@@ -16,8 +18,6 @@ public interface ExamService {
 	public boolean isValidUser(String email, String password);
 
 	public UserRegistration registerUser(UserRegistration user);
-
-	public long updatePassword(long userId, String userPassword);
 
 	public List<Question> fetchExamQuestions(int currentLevel,long courseId);
 
@@ -40,6 +40,11 @@ public interface ExamService {
 	
 	public long addNewReport(NewReport newReport);
 	
+public UserRegistration findUserByEmail(String userEmail);
+
+public boolean resetPassword(ResetPassword resetPassword);
+	
+	public boolean forgotPassword(ForgotPassword forgotPassword);
 
 	
 }

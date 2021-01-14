@@ -5,8 +5,10 @@ import java.util.List;
 import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
 import com.lti.entity.Course;
+import com.lti.entity.ForgotPassword;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
+import com.lti.entity.ResetPassword;
 import com.lti.entity.UserRegistration;
 
 public interface ExamRepository {
@@ -42,4 +44,11 @@ public interface ExamRepository {
 	public List<Course> fetchAllCourses();
 
 	public long addNewReport(NewReport newReport);
+
+	public boolean resetPassword(ResetPassword resetPassword);
+	
+	public boolean forgotPassword(ForgotPassword forgotPassword);
+
+	public UserRegistration findUserByEmail(String userEmail);
+
 }

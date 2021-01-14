@@ -3,6 +3,9 @@ package com.lti.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Random;
+
+
 import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
 
@@ -13,30 +16,41 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.lti.entity.AdminLoginDetails;
 import com.lti.entity.Course;
+import com.lti.entity.ForgotPassword;
 import com.lti.dto.QuestionDto;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
+import com.lti.entity.ResetPassword;
 import com.lti.entity.UserLoginDetails;
 import com.lti.entity.UserRegistration;
+import com.lti.service.EmailService;
 
 @Repository
 public class ExamRepositoryImpl implements ExamRepository {
 
 	@PersistenceContext
 	EntityManager em;
+	
+	@Autowired
+	EmailService emailService;
 
 	@Transactional
 	public boolean isValidAdmin(String email, String password) {
 		try {
 			String sql = "select a from AdminLoginDetails a where a.adminEmail=:adminEmail";
+			System.out.println("after sql");
 			TypedQuery<AdminLoginDetails> query = em.createQuery(sql, AdminLoginDetails.class);
 			query.setParameter("adminEmail", email);
+			System.out.println("after q");
 			AdminLoginDetails existingUser = query.getSingleResult();
+			System.out.println("after result"+existingUser.getAdminPassword());
+			
 			return existingUser.getAdminPassword().equals(password);
 
 		} catch (NoResultException noResultException) {
@@ -75,11 +89,92 @@ public class ExamRepositoryImpl implements ExamRepository {
 		// return newUser.getUserId();
 	}
 
+	
+
 	@Transactional
-	public long updatePassword(long userId, String userPassword) {
-		return 0;
+	public boolean resetPassword(ResetPassword resetPassword) {
+		try {
+			String sql = "select u from UserRegistration u where u.userEmail=:userEmail";
+			TypedQuery<UserRegistration> query = em.createQuery(sql, UserRegistration.class);
+			query.setParameter("userEmail", resetPassword.getUserEmail());
+			UserRegistration existingUser = query.getSingleResult();
+			if ((existingUser.getUserEmail().equals(resetPassword.getUserEmail())) && (resetPassword.getCode().equals(existingUser.getForgotPasswordLink())) ){
+				String jpql = "UPDATE UserRegistration u SET u.userPassword=:userPassword WHERE u.userEmail=:userEmail";
+				Query query1 = em.createQuery(jpql);
+				query1.setParameter("userPassword", resetPassword.getConfirmPassword());
+				query1.setParameter("userEmail", resetPassword.getUserEmail());
+				query1.executeUpdate();
+				return true;
+			} else {
+				return false;
+			}
+		} catch (NoResultException noResultException) {
+			return false;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
+	@Transactional
+	public boolean forgotPassword(ForgotPassword forgotPassword) {
+		try {
+			String sql = "select u from UserRegistration u where u.userEmail=:userEmail";
+			TypedQuery<UserRegistration> query = em.createQuery(sql, UserRegistration.class);
+			query.setParameter("userEmail", forgotPassword.getUserEmail());
+			UserRegistration existingUser = query.getSingleResult();
+			if (existingUser.getUserEmail().equals(forgotPassword.getUserEmail())) {
+				String code = this.generateRandomString();
+				String jpql = "UPDATE UserRegistration u SET u.forgotPasswordLink=:code WHERE u.userEmail=:userEmail";
+				Query query1 = em.createQuery(jpql);
+				query1.setParameter("code", code);
+				query1.setParameter("userEmail", forgotPassword.getUserEmail());
+				query1.executeUpdate();
+				// send email here	
+				  UserRegistration user = this.findUserByEmail(forgotPassword.getUserEmail());
+				  String subject = "Reset Password Link"; String email = user.getUserEmail();
+				  String text = "Hi " + user.getUserName() + "!! Your Password reset link is:"
+				  + "http://localhost:4200/resetpassword/"+code;
+				  emailService.sendEmailForPasswordReset(email, text, subject);
+				return true;
+			} else {
+				return false;
+			}
+		} catch (NoResultException noResultException) {
+			return false;
+		} catch (Exception e) {
+			return false;
+		}
+
+	}
+	
+	private String generateRandomString() {
+	    int leftLimit = 97; // letter 'a'
+	    int rightLimit = 122; // letter 'z'
+	    int targetStringLength = 20;
+	    Random random = new Random();
+
+	    String generatedString = random.ints(leftLimit, rightLimit + 1)
+	      .limit(targetStringLength)
+	      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+	      .toString();
+
+	    return generatedString;
+	}
+
+        @Transactional
+	public UserRegistration findUserByEmail(String userEmail) {
+		String sql = "SELECT u from UserRegistration u where u.userEmail=:userEmail";
+		try {
+			TypedQuery<UserRegistration> query = em.createQuery(sql, UserRegistration.class);
+			query.setParameter("userEmail", userEmail);
+			return query.getSingleResult();			
+		}catch (Exception e) {
+			return null;
+		}
+		
+	}
+
+	@Transactional
 	public List<Question> fetchExamQuestions(int examLevel, long courseId) {
 		String sql = "select q from Question q where q.examLevel=:examLevel and q.course.courseId=:courseId";
 		try {
@@ -227,5 +322,9 @@ public class ExamRepositoryImpl implements ExamRepository {
 		ReportCard reportCard1 = em.merge(reportCard);
 		return reportCard1.getReportId();
 	}
+
+		}
+
+
 
 }

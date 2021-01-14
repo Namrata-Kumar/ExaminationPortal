@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
 import com.lti.entity.Course;
+import com.lti.entity.ForgotPassword;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
+import com.lti.entity.ResetPassword;
 import com.lti.entity.UserCredentials;
 import com.lti.entity.UserRegistration;
 import com.lti.service.ExamService;
@@ -31,14 +33,15 @@ public class ExamController {
 	@Autowired
 	ExamService examService;
 
-	@PostMapping("/isValidAdmin")
-	public boolean isValidAdmin(@RequestBody UserCredentials userCredentials) {
-		return examService.isValidAdmin(userCredentials.getEmail(), userCredentials.getPassword());
+	@GetMapping("/isValidUser/{uemail}/{upass}")
+	public boolean isValidUser(@PathVariable("uemail") String email, @PathVariable("upass") String password) {
+	System.out.println(email+password);
+	return examService.isValidUser(email, password);
 	}
 
-	@PostMapping("/isValidUser")
-	public boolean isValidUser(@RequestBody UserCredentials userCredentials) {
-		return examService.isValidUser(userCredentials.getEmail(), userCredentials.getPassword());
+	@GetMapping("/isValidAdmin/{aemail}/{apass}")
+	public boolean isValidAdmin(@PathVariable("aemail") String email, @PathVariable("apass") String password) {
+	return examService.isValidAdmin(email, password);
 	}
 
 	@PostMapping(value = "/register")
@@ -46,11 +49,14 @@ public class ExamController {
 		return examService.registerUser(user);
 	}
 
-	@PostMapping(value = "/updatePassword")
-	public long updatePassword(@RequestBody long userId, String userPassword) {
-		examService.updatePassword(userId, userPassword);
-		return userId;
-
+	@PostMapping(value = "/resetPassword")
+	public boolean resetPassword(@RequestBody ResetPassword resetPassword) {
+		 return examService.resetPassword(resetPassword);
+	}
+	
+	@PostMapping(value="/forgotPassword")
+	public boolean forgotPassword(@RequestBody ForgotPassword forgotPassword) {
+		return examService.forgotPassword(forgotPassword);
 	}
 
 	@GetMapping(value = "/fetchExamQuestions/{currentLevel}/{courseId}", produces = { MediaType.APPLICATION_XML_VALUE,
@@ -134,5 +140,6 @@ public class ExamController {
 	public long addNewReport(@RequestBody NewReport newReport) {
 		return examService.addNewReport(newReport);
 	}
+
 
 }

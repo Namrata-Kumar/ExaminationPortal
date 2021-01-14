@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lti.entity.Course;
+import com.lti.entity.ForgotPassword;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
+import com.lti.entity.ResetPassword;
 import com.lti.entity.UserRegistration;
 import com.lti.repository.ExamRepository;
 import com.lti.dto.NewReport;
@@ -18,6 +20,9 @@ public class ExamServiceImpl implements ExamService {
 
 	@Autowired
 	ExamRepository examRepository;
+	
+	@Autowired
+	EmailService emailService;
 
 	@Override
 	public boolean isValidAdmin(String email, String password) {
@@ -36,10 +41,6 @@ public class ExamServiceImpl implements ExamService {
 		return examRepository.registerUser(user);
 	}
 
-	public long updatePassword(long userId, String userPassword) {
-		return examRepository.updatePassword(userId, userPassword);
-
-	}
 
 	@Override
 	public List<Question> fetchExamQuestions(int currentLevel, long courseId) {
@@ -106,5 +107,22 @@ public class ExamServiceImpl implements ExamService {
 		return examRepository.addNewReport(newReport);
 
 	}
+
+	@Override
+	public boolean resetPassword(ResetPassword resetPassword) {
+		return examRepository.resetPassword(resetPassword);
+
+	}
+	
+	@Override
+	public boolean forgotPassword(ForgotPassword forgotPassword) {
+		return examRepository.forgotPassword(forgotPassword);
+	}
+
+	@Override
+	public UserRegistration findUserByEmail(String userEmail) {
+		return examRepository.findUserByEmail(userEmail);
+	}
+
 
 }
