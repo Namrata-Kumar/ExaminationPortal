@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
 
 import javax.persistence.EntityManager;
@@ -33,7 +34,6 @@ public class ExamRepositoryImpl implements ExamRepository {
 
 	@PersistenceContext
 	EntityManager em;
-	private String abcd;
 	
 	@Autowired
 	EmailService emailService;
@@ -82,6 +82,8 @@ public class ExamRepositoryImpl implements ExamRepository {
 		return null;
 		// return newUser.getUserId();
 	}
+
+	
 
 	@Transactional
 	public boolean resetPassword(ResetPassword resetPassword) {
@@ -151,6 +153,19 @@ public class ExamRepositoryImpl implements ExamRepository {
 	      .toString();
 
 	    return generatedString;
+	}
+
+        @Transactional
+	public UserRegistration findUserByEmail(String userEmail) {
+		String sql = "SELECT u from UserRegistration u where u.userEmail=:userEmail";
+		try {
+			TypedQuery<UserRegistration> query = em.createQuery(sql, UserRegistration.class);
+			query.setParameter("userEmail", userEmail);
+			return query.getSingleResult();			
+		}catch (Exception e) {
+			return null;
+		}
+		
 	}
 
 	@Transactional
@@ -223,7 +238,7 @@ public class ExamRepositoryImpl implements ExamRepository {
 
 	@Transactional
 	public List<Course> fetchAllCourses() {
-		String sql = "select c from course c";
+		String sql = "select c from Course c";
 		try {
 			TypedQuery<Course> query = em.createQuery(sql, Course.class);
 			return query.getResultList();
@@ -278,15 +293,32 @@ public class ExamRepositoryImpl implements ExamRepository {
 	}
 
 	@Transactional
-	public UserRegistration findUserByEmail(String userEmail) {
-		String sql = "SELECT u from UserRegistration u where u.userEmail=:userEmail";
-		try {
-			TypedQuery<UserRegistration> query = em.createQuery(sql, UserRegistration.class);
-			query.setParameter("userEmail", userEmail);
-			return query.getSingleResult();			
-		}catch (Exception e) {
-			return null;
-		}
-		
+	public long addNewReport(NewReport newReport) {
+		ReportCard reportCard = new ReportCard();
+		Course course = em.find(Course.class, newReport.getCourseId());
+		UserRegistration userRegistration = em.find(UserRegistration.class, newReport.getUserId());
+		reportCard.setUserRegistration(userRegistration);
+		reportCard.setCourse(course);
+		reportCard.setCurrentLevel(1);
+		reportCard.setLevel1Score(0);
+		reportCard.setLevel2Score(0);
+		reportCard.setLevel3Score(0);
+		reportCard.setStatus(0);
+
+		/*
+		 * String sql = "insert into ReportCard values(?,?,?,?,?,?,?);"; Query query =
+		 * em.createQuery(sql, ReportCard.class); query.setParameter(1, 1);
+		 * query.setParameter(2, 0); query.setParameter(3, 0); query.setParameter(4, 0);
+		 * query.setParameter(5, 0); query.setParameter(6, newReport.getCourseId());
+		 * query.setParameter(7, newReport.getUserId()); ReportCard reportCard =
+		 * (ReportCard) query.getSingleResult(); return reportCard.getReportId();
+		 */
+		ReportCard reportCard1 = em.merge(reportCard);
+		return reportCard1.getReportId();
 	}
+
+
+
+
+
 }

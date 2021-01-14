@@ -32,14 +32,15 @@ public class ExamController {
 	@Autowired
 	ExamService examService;
 
-	@PostMapping("/isValidAdmin")
-	public boolean isValidAdmin(@RequestBody UserCredentials userCredentials) {
-		return examService.isValidAdmin(userCredentials.getEmail(), userCredentials.getPassword());
+	@GetMapping("/isValidUser/{uemail}/{upass}")
+	public boolean isValidUser(@PathVariable("uemail") String email, @PathVariable("upass") String password) {
+	System.out.println(email+password);
+	return examService.isValidUser(email, password);
 	}
 
-	@PostMapping("/isValidUser")
-	public boolean isValidUser(@RequestBody UserCredentials userCredentials) {
-		return examService.isValidUser(userCredentials.getEmail(), userCredentials.getPassword());
+	@GetMapping("/isValidAdmin/{aemail}/{apass}")
+	public boolean isValidAdmin(@PathVariable("aemail") String email, @PathVariable("apass") String password) {
+	return examService.isValidAdmin(email, password);
 	}
 
 	@PostMapping(value = "/register")

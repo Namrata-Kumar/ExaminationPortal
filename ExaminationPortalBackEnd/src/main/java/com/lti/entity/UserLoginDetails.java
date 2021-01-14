@@ -17,7 +17,6 @@ public class UserLoginDetails {
 	@SequenceGenerator(name = "seq_userlogin", initialValue = 001, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_userlogin")
 	long userLoginId;
-	String userEmail;
 	String forgotPasswordLink;
 	
 	@OneToOne
@@ -47,16 +46,6 @@ public class UserLoginDetails {
 	public void setUserRegistration(UserRegistration userRegistration) {
 		this.userRegistration = userRegistration;
 	}
-
-	public String getUserEmail() {
-		return userEmail;
-	}
-
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
-	}
-	
-	
 	
 	
 	
