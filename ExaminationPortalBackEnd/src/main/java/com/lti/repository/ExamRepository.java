@@ -19,6 +19,8 @@ public interface ExamRepository {
 
 	public UserRegistration registerUser(UserRegistration user);
 
+	public long updatePassword(long userId, String userPassword);
+
 	public List<Question> fetchExamQuestions(int currentLevel, long courseId);
 
 	public long updateReportCard();
@@ -48,4 +50,5 @@ public interface ExamRepository {
 	public boolean forgotPassword(ForgotPassword forgotPassword);
 
 	public UserRegistration findUserByEmail(String userEmail);
+
 }

@@ -2,7 +2,9 @@ package com.lti.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import java.util.Random;
+
 
 import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
@@ -319,9 +321,9 @@ public class ExamRepositoryImpl implements ExamRepository {
 		 */
 		ReportCard reportCard1 = em.merge(reportCard);
 		return reportCard1.getReportId();
+	}
+
 		}
-
-
 
 
 
