@@ -140,6 +140,11 @@ public class ExamController {
 	public long addNewReport(@RequestBody NewReport newReport) {
 		return examService.addNewReport(newReport);
 	}
+	
+	@PostMapping(value = "/addNewReport")
+	public long addNewReport(@RequestBody NewReport newReport) {
+		return examService.addNewReport(newReport);
+	}
 
 
 }
