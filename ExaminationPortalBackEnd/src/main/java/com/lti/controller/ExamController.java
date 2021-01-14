@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
+import com.lti.entity.Course;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
 import com.lti.entity.UserCredentials;
@@ -53,8 +55,9 @@ public class ExamController {
 
 	@GetMapping(value = "/fetchExamQuestions/{currentLevel}/{courseId}", produces = { MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE })
-	public List<QuestionDto> fetchExamQuestions(@PathVariable("currentLevel") int currentLevel,@PathVariable("courseId") long courseId) {
-		List<Question> questions = examService.fetchExamQuestions(currentLevel,courseId);
+	public List<QuestionDto> fetchExamQuestions(@PathVariable("currentLevel") int currentLevel,
+			@PathVariable("courseId") long courseId) {
+		List<Question> questions = examService.fetchExamQuestions(currentLevel, courseId);
 		List<QuestionDto> dtoList = new ArrayList<QuestionDto>();
 		for (Question question : questions) {
 			QuestionDto dto = new QuestionDto();
@@ -79,10 +82,11 @@ public class ExamController {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
+
 	@GetMapping(value = "/displayScoreByLevelandId/{examLevel}/{userId}/{courseId}")
-	public int displayScoreByLevelandId(@PathVariable("examLevel") int examLevel,@PathVariable("userId") long userId,@PathVariable("courseId") long courseId) {
-		return examService.displayScoreByLevelandId(examLevel, userId, courseId) ;
+	public int displayScoreByLevelandId(@PathVariable("examLevel") int examLevel, @PathVariable("userId") long userId,
+			@PathVariable("courseId") long courseId) {
+		return examService.displayScoreByLevelandId(examLevel, userId, courseId);
 	}
 
 	@PostMapping(value = "/addQuestion")
@@ -120,6 +124,15 @@ public class ExamController {
 		return reportCard;
 
 	}
-	
+
+	@GetMapping(value = "/fetchAllCourses")
+	public List<Course> fetchAllCourses() {
+		return examService.fetchAllCourses();
+	}
+
+	@PostMapping(value = "/addNewReport")
+	public long addNewReport(@RequestBody NewReport newReport) {
+		return examService.addNewReport(newReport);
+	}
 
 }

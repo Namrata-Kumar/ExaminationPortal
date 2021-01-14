@@ -2,11 +2,14 @@ package com.lti.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
@@ -119,12 +122,12 @@ public class ExamRepositoryImpl implements ExamRepository {
 		return question1.getQuestionId();
 
 	}
-	
+
 	@Transactional
 	public long addReport(ReportCard reportCard) {
-		  ReportCard reportCard1 = em.merge(reportCard);
-		  return reportCard1.getReportId();
-	  }
+		ReportCard reportCard1 = em.merge(reportCard);
+		return reportCard1.getReportId();
+	}
 
 	@Transactional
 	public long removeQuestion(long questionId) {
@@ -143,19 +146,18 @@ public class ExamRepositoryImpl implements ExamRepository {
 			return null;
 		}
 	}
-	
+
 	@Transactional
-	public List<Course> fetchAllCourses(){
-		String sql = "select c from course c";
+	public List<Course> fetchAllCourses() {
+		String sql = "select c from Course c";
 		try {
 			TypedQuery<Course> query = em.createQuery(sql, Course.class);
 			return query.getResultList();
 		} catch (Exception e) {
 			return null;
 		}
-		
+
 	}
-	
 
 	@Transactional
 	public List<UserRegistration> findUsersByDetails(long courseId, int currentLevel) {
@@ -174,7 +176,6 @@ public class ExamRepositoryImpl implements ExamRepository {
 			return null;
 		}
 	}
-
 
 	public ReportCard findReportBasedOnCourseAndUserId(long userId, long courseId) {
 		String sql = "select r from ReportCard r where r.userRegistration.userId=:userId and r.course.courseId=:courseId";
@@ -195,12 +196,36 @@ public class ExamRepositoryImpl implements ExamRepository {
 		}
 
 	}
-  @Override
+
+	@Override
 	public int displayScoreByLevelandId(int examLevel, long userId, long courseId) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-  
-  
+
+	@Transactional
+	public long addNewReport(NewReport newReport) {
+		ReportCard reportCard = new ReportCard();
+		Course course = em.find(Course.class, newReport.getCourseId());
+		UserRegistration userRegistration = em.find(UserRegistration.class, newReport.getUserId());
+		reportCard.setUserRegistration(userRegistration);
+		reportCard.setCourse(course);
+		reportCard.setCurrentLevel(1);
+		reportCard.setLevel1Score(0);
+		reportCard.setLevel2Score(0);
+		reportCard.setLevel3Score(0);
+		reportCard.setStatus(0);
+
+		/*
+		 * String sql = "insert into ReportCard values(?,?,?,?,?,?,?);"; Query query =
+		 * em.createQuery(sql, ReportCard.class); query.setParameter(1, 1);
+		 * query.setParameter(2, 0); query.setParameter(3, 0); query.setParameter(4, 0);
+		 * query.setParameter(5, 0); query.setParameter(6, newReport.getCourseId());
+		 * query.setParameter(7, newReport.getUserId()); ReportCard reportCard =
+		 * (ReportCard) query.getSingleResult(); return reportCard.getReportId();
+		 */
+		ReportCard reportCard1 = em.merge(reportCard);
+		return reportCard1.getReportId();
+	}
 
 }

@@ -10,6 +10,7 @@ import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
 import com.lti.entity.UserRegistration;
 import com.lti.repository.ExamRepository;
+import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
 
 @Service
@@ -19,13 +20,13 @@ public class ExamServiceImpl implements ExamService {
 	ExamRepository examRepository;
 
 	@Override
-	public boolean isValidAdmin(String email,String password) {
-		
+	public boolean isValidAdmin(String email, String password) {
+
 		return examRepository.isValidAdmin(email, password);
 	}
 
 	@Override
-	public boolean isValidUser(String email, String password){
+	public boolean isValidUser(String email, String password) {
 
 		return examRepository.isValidUser(email, password);
 	}
@@ -41,8 +42,8 @@ public class ExamServiceImpl implements ExamService {
 	}
 
 	@Override
-	public List<Question> fetchExamQuestions(int currentLevel,long courseId) {
-		return examRepository.fetchExamQuestions(currentLevel,courseId);
+	public List<Question> fetchExamQuestions(int currentLevel, long courseId) {
+		return examRepository.fetchExamQuestions(currentLevel, courseId);
 	}
 
 	@Override
@@ -52,9 +53,9 @@ public class ExamServiceImpl implements ExamService {
 	}
 
 	@Override
-	public int displayScoreByLevelandId(int examLevel,long userId,long courseId) {
+	public int displayScoreByLevelandId(int examLevel, long userId, long courseId) {
 
-		return examRepository.displayScoreByLevelandId(examLevel, userId, courseId) ;
+		return examRepository.displayScoreByLevelandId(examLevel, userId, courseId);
 	}
 
 	@Override
@@ -63,13 +64,11 @@ public class ExamServiceImpl implements ExamService {
 		return examRepository.addQuestion(question);
 
 	}
-	
+
 	@Override
 	public long addReport(ReportCard reportCard) {
-		  return examRepository.addReport(reportCard);
-	  }
-
-	
+		return examRepository.addReport(reportCard);
+	}
 
 	@Override
 	public long removeQuestion(long questionId) {
@@ -82,27 +81,30 @@ public class ExamServiceImpl implements ExamService {
 		return examRepository.viewAllReportCards();
 	}
 
-	
-	  @Override public List<UserRegistration> findUsersByDetails(long courseId, int
-	  currentLevel) {
-	  
-	  return null;
-	  }
-	 
+	@Override
+	public List<UserRegistration> findUsersByDetails(long courseId, int currentLevel) {
+
+		return null;
+	}
 
 	@Override
 	public List<UserRegistration> viewAllUsers() {
-		
+
 		return examRepository.viewAllUsers();
 	}
-	public ReportCard findReportBasedOnCourseAndUserId(long userId,long courseId) {
-		return examRepository.findReportBasedOnCourseAndUserId(userId,courseId);
+
+	public ReportCard findReportBasedOnCourseAndUserId(long userId, long courseId) {
+		return examRepository.findReportBasedOnCourseAndUserId(userId, courseId);
 
 	}
-	
-	public List<Course> fetchAllCourses(){
+
+	public List<Course> fetchAllCourses() {
 		return examRepository.fetchAllCourses();
 	}
-	
+
+	public long addNewReport(NewReport newReport) {
+		return examRepository.addNewReport(newReport);
+
+	}
 
 }

@@ -2,6 +2,7 @@ package com.lti.repository;
 
 import java.util.List;
 
+import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
 import com.lti.entity.Course;
 import com.lti.entity.Question;
@@ -18,11 +19,11 @@ public interface ExamRepository {
 
 	public long updatePassword(long userId, String userPassword);
 
-	public List<Question> fetchExamQuestions(int currentLevel,long courseId);
+	public List<Question> fetchExamQuestions(int currentLevel, long courseId);
 
 	public long updateReportCard();
 
-	public int displayScoreByLevelandId(int examLevel,long userId,long courseId);
+	public int displayScoreByLevelandId(int examLevel, long userId, long courseId);
 
 	public long addQuestion(Question question);
 
@@ -33,9 +34,12 @@ public interface ExamRepository {
 	public List<UserRegistration> findUsersByDetails(long courseId, int currentLevel);
 
 	public List<UserRegistration> viewAllUsers();
-	public ReportCard findReportBasedOnCourseAndUserId(long userId,long courseId);
+
+	public ReportCard findReportBasedOnCourseAndUserId(long userId, long courseId);
 
 	public long addReport(ReportCard reportCard);
 
 	public List<Course> fetchAllCourses();
+
+	public long addNewReport(NewReport newReport);
 }
