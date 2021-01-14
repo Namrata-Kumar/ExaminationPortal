@@ -2,6 +2,7 @@ package com.lti.repository;
 
 import java.util.List;
 
+import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
 import com.lti.entity.Course;
 import com.lti.entity.ForgotPassword;
@@ -18,15 +19,11 @@ public interface ExamRepository {
 
 	public UserRegistration registerUser(UserRegistration user);
 
-	public boolean resetPassword(ResetPassword resetPassword);
-	
-	public boolean forgotPassword(ForgotPassword forgotPassword);
-
-	public List<Question> fetchExamQuestions(int currentLevel,long courseId);
+	public List<Question> fetchExamQuestions(int currentLevel, long courseId);
 
 	public long updateReportCard();
 
-	public int displayScoreByLevelandId(int examLevel,long userId,long courseId);
+	public int displayScoreByLevelandId(int examLevel, long userId, long courseId);
 
 	public long addQuestion(Question question);
 
@@ -37,12 +34,18 @@ public interface ExamRepository {
 	public List<UserRegistration> findUsersByDetails(long courseId, int currentLevel);
 
 	public List<UserRegistration> viewAllUsers();
-	
-	public ReportCard findReportBasedOnCourseAndUserId(long userId,long courseId);
+
+	public ReportCard findReportBasedOnCourseAndUserId(long userId, long courseId);
 
 	public long addReport(ReportCard reportCard);
 
 	public List<Course> fetchAllCourses();
+
+	public long addNewReport(NewReport newReport);
+
+	public boolean resetPassword(ResetPassword resetPassword);
 	
+	public boolean forgotPassword(ForgotPassword forgotPassword);
+
 	public UserRegistration findUserByEmail(String userEmail);
 }

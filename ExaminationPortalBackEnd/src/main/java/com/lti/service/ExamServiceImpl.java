@@ -12,6 +12,7 @@ import com.lti.entity.ReportCard;
 import com.lti.entity.ResetPassword;
 import com.lti.entity.UserRegistration;
 import com.lti.repository.ExamRepository;
+import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
 
 @Service
@@ -40,16 +41,6 @@ public class ExamServiceImpl implements ExamService {
 		return examRepository.registerUser(user);
 	}
 
-	@Override
-	public boolean resetPassword(ResetPassword resetPassword) {
-		return examRepository.resetPassword(resetPassword);
-
-	}
-	
-	public boolean forgotPassword(ForgotPassword forgotPassword) {
-		return examRepository.forgotPassword(forgotPassword);
-	}
-	
 
 	@Override
 	public List<Question> fetchExamQuestions(int currentLevel, long courseId) {
@@ -112,8 +103,29 @@ public class ExamServiceImpl implements ExamService {
 		return examRepository.fetchAllCourses();
 	}
 
+	public long addNewReport(NewReport newReport) {
+		return examRepository.addNewReport(newReport);
+
+	}
+
+	@Override
+	public boolean resetPassword(ResetPassword resetPassword) {
+		return examRepository.resetPassword(resetPassword);
+
+	}
+	
+	@Override
+	public boolean forgotPassword(ForgotPassword forgotPassword) {
+		return examRepository.forgotPassword(forgotPassword);
+	}
+
 	@Override
 	public UserRegistration findUserByEmail(String userEmail) {
 		return examRepository.findUserByEmail(userEmail);
 	}
+
+
+
+	
+
 }
