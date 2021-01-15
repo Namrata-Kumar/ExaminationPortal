@@ -324,9 +324,15 @@ public class ExamRepositoryImpl implements ExamRepository {
 		return reportCard1.getReportId();
 	}
 
+	@Override
+	public long updatePassword(long userId, String userPassword) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 		}
 
 
 
-}
+
 
