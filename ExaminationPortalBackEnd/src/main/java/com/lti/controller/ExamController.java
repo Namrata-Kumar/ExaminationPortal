@@ -1,3 +1,4 @@
+
 package com.lti.controller;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
+import com.lti.dto.ReportCardDto;
 import com.lti.entity.Course;
 import com.lti.entity.ForgotPassword;
 import com.lti.entity.Question;
@@ -34,8 +36,8 @@ public class ExamController {
 	@Autowired
 	ExamService examService;
 
-	@GetMapping("/isValidUser/{uemail}/{upass}")
-	public boolean isValidUser(@PathVariable("uemail") String email, @PathVariable("upass") String password) {
+@GetMapping("/isValidUser/{uemail}/{upass}")
+	public long isValidUser(@PathVariable("uemail") String email, @PathVariable("upass") String password) {
 		System.out.println(email + password);
 		return examService.isValidUser(email, password);
 	}
@@ -96,14 +98,13 @@ public class ExamController {
 	}
 
 	@PostMapping(value = "/addQuestion")
-	public long addQuestion(@RequestBody Question question) {
+	public long addQuestion(@RequestBody QuestionDto question) {
 		return examService.addQuestion(question);
 	}
 
-	@PostMapping(value = "/removeQuestion")
+@GetMapping(value = "/removeQuestion")
 	public long removeQuestion(@RequestParam("questionId") long questionId) {
 		return examService.removeQuestion(questionId);
-
 	}
 
 	@RequestMapping(value = "/viewAllReportCards")
@@ -148,10 +149,16 @@ public class ExamController {
 	public List<Course> fetchAllCourses() {
 		return examService.fetchAllCourses();
 	}
-
-	@PostMapping(value = "/addNewReport")
+  
+@PostMapping(value = "/addNewReport")
 	public long addNewReport(@RequestBody NewReport newReport) {
 		return examService.addNewReport(newReport);
+	}
+
+	@PostMapping(value = "/updateReport")
+	public long updateExistingReport(@RequestBody ReportCardDto reportCard) {
+		return examService.updateExistingReport(reportCard);
+
 	}
 
 }

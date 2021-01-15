@@ -1,3 +1,4 @@
+
 package com.lti.repository;
 
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.Random;
 
 import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
+import com.lti.dto.ReportCardDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -18,6 +20,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.lti.entity.AdminLoginDetails;
 import com.lti.entity.Course;
@@ -59,18 +62,19 @@ public class ExamRepositoryImpl implements ExamRepository {
 	}
 
 	@Transactional
-	public boolean isValidUser(String email, String password) {
+	public long isValidUser(String email, String password) {
 		try {
-			String sql = "select u from UserRegistration u where u.userEmail=:userEmail";
+			String sql = "select u from UserRegistration u where u.userEmail=:userEmail and u.userPassword=:userPassword";
 			TypedQuery<UserRegistration> query = em.createQuery(sql, UserRegistration.class);
 			query.setParameter("userEmail", email);
+			query.setParameter("userPassword", password);
 			UserRegistration existingUser = query.getSingleResult();
-			return existingUser.getUserPassword().equals(password);
-		} catch (NoResultException noResultException) {
-			return false;
+			return existingUser.getUserId();
+			// return existingUser.getUserPassword().equals(password);
 		} catch (Exception e) {
-			return false;
+			return 0;
 		}
+
 	}
 
 	@Transactional
@@ -208,9 +212,20 @@ public class ExamRepositoryImpl implements ExamRepository {
 	 */
 
 	@Transactional
-	public long addQuestion(Question question) {
-		Question question1 = em.merge(question);
-		return question1.getQuestionId();
+	public long addQuestion(QuestionDto question) {
+		// System.out.println(question.get);
+		Question question1 = new Question();
+		Course course = em.find(Course.class, question.getCourseId());
+		question1.setCourse(course);
+		question1.setDescription(question.getDescription());
+		question1.setExamLevel(question.getExamLevel());
+		question1.setOptionOne(question.getOptionOne());
+		question1.setOptionTwo(question.getOptionTwo());
+		question1.setOptionThree(question.getOptionThree());
+		question1.setOptionFour(question.getOptionFour());
+		question1.setAnswer(question.getAnswer());
+		Question question2 = em.merge(question1);
+		return question2.getQuestionId();
 
 	}
 
@@ -357,5 +372,30 @@ public class ExamRepositoryImpl implements ExamRepository {
 		ReportCard reportCard1 = em.merge(reportCard);
 		return reportCard1.getReportId();
 	}
+  
+	@Override
+	public long updatePassword(long userId, String userPassword) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Transactional
+	public long updateExistingReport(ReportCardDto reportCard) {
+		ReportCard report = new ReportCard();
+		Course course = em.find(Course.class, reportCard.getCourseId());
+		UserRegistration user = em.find(UserRegistration.class, reportCard.getUserId());
+		report.setCourse(course);
+		report.setUserRegistration(user);
+		report.setCurrentLevel(reportCard.getCurrentLevel());
+		report.setLevel1Score(reportCard.getLevel1Score());
+		report.setLevel2Score(reportCard.getLevel2Score());
+		report.setLevel3Score(reportCard.getLevel3Score());
+		report.setReportId(reportCard.getReportId());
+		report.setStatus(reportCard.getStatus());
+		ReportCard updatedReport = em.merge(report);
+		return updatedReport.getReportId();
+	}
 
 }
+
