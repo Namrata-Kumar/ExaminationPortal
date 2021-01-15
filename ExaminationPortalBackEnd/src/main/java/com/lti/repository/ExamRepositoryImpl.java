@@ -213,9 +213,20 @@ public class ExamRepositoryImpl implements ExamRepository {
 	 */
 
 	@Transactional
-	public long addQuestion(Question question) {
-		Question question1 = em.merge(question);
-		return question1.getQuestionId();
+	public long addQuestion(QuestionDto question) {
+		// System.out.println(question.get);
+		Question question1 = new Question();
+		Course course = em.find(Course.class, question.getCourseId());
+		question1.setCourse(course);
+		question1.setDescription(question.getDescription());
+		question1.setExamLevel(question.getExamLevel());
+		question1.setOptionOne(question.getOptionOne());
+		question1.setOptionTwo(question.getOptionTwo());
+		question1.setOptionThree(question.getOptionThree());
+		question1.setOptionFour(question.getOptionFour());
+		question1.setAnswer(question.getAnswer());
+		Question question2 = em.merge(question1);
+		return question2.getQuestionId();
 
 	}
 
