@@ -6,9 +6,9 @@ import java.util.List;
 
 import java.util.Random;
 
-
 import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
+import com.lti.dto.ReportCardDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -20,6 +20,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.lti.entity.AdminLoginDetails;
 import com.lti.entity.Course;
@@ -37,7 +38,7 @@ public class ExamRepositoryImpl implements ExamRepository {
 
 	@PersistenceContext
 	EntityManager em;
-	
+
 	@Autowired
 	EmailService emailService;
 
@@ -50,8 +51,8 @@ public class ExamRepositoryImpl implements ExamRepository {
 			query.setParameter("adminEmail", email);
 			System.out.println("after q");
 			AdminLoginDetails existingUser = query.getSingleResult();
-			System.out.println("after result"+existingUser.getAdminPassword());
-			
+			System.out.println("after result" + existingUser.getAdminPassword());
+
 			return existingUser.getAdminPassword().equals(password);
 
 		} catch (NoResultException noResultException) {
@@ -62,18 +63,19 @@ public class ExamRepositoryImpl implements ExamRepository {
 	}
 
 	@Transactional
-	public boolean isValidUser(String email, String password) {
+	public long isValidUser(String email, String password) {
 		try {
-			String sql = "select u from UserRegistration u where u.userEmail=:userEmail";
+			String sql = "select u from UserRegistration u where u.userEmail=:userEmail and u.userPassword=:userPassword";
 			TypedQuery<UserRegistration> query = em.createQuery(sql, UserRegistration.class);
 			query.setParameter("userEmail", email);
+			query.setParameter("userPassword", password);
 			UserRegistration existingUser = query.getSingleResult();
-			return existingUser.getUserPassword().equals(password);
-		} catch (NoResultException noResultException) {
-			return false;
+			return existingUser.getUserId();
+			// return existingUser.getUserPassword().equals(password);
 		} catch (Exception e) {
-			return false;
+			return 0;
 		}
+
 	}
 
 	@Transactional
@@ -90,8 +92,6 @@ public class ExamRepositoryImpl implements ExamRepository {
 		// return newUser.getUserId();
 	}
 
-	
-
 	@Transactional
 	public boolean resetPassword(ResetPassword resetPassword) {
 		try {
@@ -99,7 +99,8 @@ public class ExamRepositoryImpl implements ExamRepository {
 			TypedQuery<UserRegistration> query = em.createQuery(sql, UserRegistration.class);
 			query.setParameter("userEmail", resetPassword.getUserEmail());
 			UserRegistration existingUser = query.getSingleResult();
-			if ((existingUser.getUserEmail().equals(resetPassword.getUserEmail())) && (resetPassword.getCode().equals(existingUser.getForgotPasswordLink())) ){
+			if ((existingUser.getUserEmail().equals(resetPassword.getUserEmail()))
+					&& (resetPassword.getCode().equals(existingUser.getForgotPasswordLink()))) {
 				String jpql = "UPDATE UserRegistration u SET u.userPassword=:userPassword WHERE u.userEmail=:userEmail";
 				Query query1 = em.createQuery(jpql);
 				query1.setParameter("userPassword", resetPassword.getConfirmPassword());
@@ -130,12 +131,13 @@ public class ExamRepositoryImpl implements ExamRepository {
 				query1.setParameter("code", code);
 				query1.setParameter("userEmail", forgotPassword.getUserEmail());
 				query1.executeUpdate();
-				// send email here	
-				  UserRegistration user = this.findUserByEmail(forgotPassword.getUserEmail());
-				  String subject = "Reset Password Link"; String email = user.getUserEmail();
-				  String text = "Hi " + user.getUserName() + "!! Your Password reset link is:"
-				  + "http://localhost:4200/resetpassword/"+code;
-				  emailService.sendEmailForPasswordReset(email, text, subject);
+				// send email here
+				UserRegistration user = this.findUserByEmail(forgotPassword.getUserEmail());
+				String subject = "Reset Password Link";
+				String email = user.getUserEmail();
+				String text = "Hi " + user.getUserName() + "!! Your Password reset link is:"
+						+ "http://localhost:4200/resetpassword/" + code;
+				emailService.sendEmailForPasswordReset(email, text, subject);
 				return true;
 			} else {
 				return false;
@@ -147,32 +149,30 @@ public class ExamRepositoryImpl implements ExamRepository {
 		}
 
 	}
-	
+
 	private String generateRandomString() {
-	    int leftLimit = 97; // letter 'a'
-	    int rightLimit = 122; // letter 'z'
-	    int targetStringLength = 20;
-	    Random random = new Random();
+		int leftLimit = 97; // letter 'a'
+		int rightLimit = 122; // letter 'z'
+		int targetStringLength = 20;
+		Random random = new Random();
 
-	    String generatedString = random.ints(leftLimit, rightLimit + 1)
-	      .limit(targetStringLength)
-	      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-	      .toString();
+		String generatedString = random.ints(leftLimit, rightLimit + 1).limit(targetStringLength)
+				.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
 
-	    return generatedString;
+		return generatedString;
 	}
 
-        @Transactional
+	@Transactional
 	public UserRegistration findUserByEmail(String userEmail) {
 		String sql = "SELECT u from UserRegistration u where u.userEmail=:userEmail";
 		try {
 			TypedQuery<UserRegistration> query = em.createQuery(sql, UserRegistration.class);
 			query.setParameter("userEmail", userEmail);
-			return query.getSingleResult();			
-		}catch (Exception e) {
+			return query.getSingleResult();
+		} catch (Exception e) {
 			return null;
 		}
-		
+
 	}
 
 	@Transactional
@@ -213,9 +213,20 @@ public class ExamRepositoryImpl implements ExamRepository {
 	 */
 
 	@Transactional
-	public long addQuestion(Question question) {
-		Question question1 = em.merge(question);
-		return question1.getQuestionId();
+	public long addQuestion(QuestionDto question) {
+		// System.out.println(question.get);
+		Question question1 = new Question();
+		Course course = em.find(Course.class, question.getCourseId());
+		question1.setCourse(course);
+		question1.setDescription(question.getDescription());
+		question1.setExamLevel(question.getExamLevel());
+		question1.setOptionOne(question.getOptionOne());
+		question1.setOptionTwo(question.getOptionTwo());
+		question1.setOptionThree(question.getOptionThree());
+		question1.setOptionFour(question.getOptionFour());
+		question1.setAnswer(question.getAnswer());
+		Question question2 = em.merge(question1);
+		return question2.getQuestionId();
 
 	}
 
@@ -330,9 +341,24 @@ public class ExamRepositoryImpl implements ExamRepository {
 		return 0;
 	}
 
-		}
+
+	@Transactional
+	public long updateExistingReport(ReportCardDto reportCard) {
+		ReportCard report = new ReportCard();
+		Course course = em.find(Course.class, reportCard.getCourseId());
+		UserRegistration user = em.find(UserRegistration.class, reportCard.getUserId());
+		report.setCourse(course);
+		report.setUserRegistration(user);
+		report.setCurrentLevel(reportCard.getCurrentLevel());
+		report.setLevel1Score(reportCard.getLevel1Score());
+		report.setLevel2Score(reportCard.getLevel2Score());
+		report.setLevel3Score(reportCard.getLevel3Score());
+		report.setReportId(reportCard.getReportId());
+		report.setStatus(reportCard.getStatus());
+		ReportCard updatedReport = em.merge(report);
+		return updatedReport.getReportId();
+	}
 
 
-
-
+}
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.lti.entity.Course;
 import com.lti.entity.ForgotPassword;
@@ -14,6 +15,7 @@ import com.lti.entity.UserRegistration;
 import com.lti.repository.ExamRepository;
 import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
+import com.lti.dto.ReportCardDto;
 
 @Service
 public class ExamServiceImpl implements ExamService {
@@ -31,7 +33,7 @@ public class ExamServiceImpl implements ExamService {
 	}
 
 	@Override
-	public boolean isValidUser(String email, String password) {
+	public long isValidUser(String email, String password) {
 
 		return examRepository.isValidUser(email, password);
 	}
@@ -60,7 +62,7 @@ public class ExamServiceImpl implements ExamService {
 	}
 
 	@Override
-	public long addQuestion(Question question) {
+	public long addQuestion(QuestionDto question) {
 
 		return examRepository.addQuestion(question);
 
@@ -124,5 +126,8 @@ public class ExamServiceImpl implements ExamService {
 		return examRepository.findUserByEmail(userEmail);
 	}
 
+	public long  updateExistingReport(ReportCardDto reportCard) {
+		return examRepository.updateExistingReport(reportCard);
+	}
 
 }

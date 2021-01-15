@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
+import com.lti.dto.ReportCardDto;
 import com.lti.entity.Course;
 import com.lti.entity.ForgotPassword;
 import com.lti.entity.Question;
@@ -15,7 +16,7 @@ public interface ExamRepository {
 
 	public boolean isValidAdmin(String email, String password);
 
-	public boolean isValidUser(String email, String password);
+	public long isValidUser(String email, String password);
 
 	public UserRegistration registerUser(UserRegistration user);
 
@@ -27,7 +28,7 @@ public interface ExamRepository {
 
 	public int displayScoreByLevelandId(int examLevel, long userId, long courseId);
 
-	public long addQuestion(Question question);
+	public long addQuestion(QuestionDto question);
 
 	public long removeQuestion(long questionId);
 
@@ -46,9 +47,11 @@ public interface ExamRepository {
 	public long addNewReport(NewReport newReport);
 
 	public boolean resetPassword(ResetPassword resetPassword);
-	
+
 	public boolean forgotPassword(ForgotPassword forgotPassword);
 
 	public UserRegistration findUserByEmail(String userEmail);
+
+	public long  updateExistingReport(ReportCardDto reportCard);
 
 }
