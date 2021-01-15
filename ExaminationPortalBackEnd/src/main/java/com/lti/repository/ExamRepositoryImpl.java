@@ -341,6 +341,7 @@ public class ExamRepositoryImpl implements ExamRepository {
 		return 0;
 	}
 
+
 	@Transactional
 	public long updateExistingReport(ReportCardDto reportCard) {
 		ReportCard report = new ReportCard();
@@ -358,4 +359,6 @@ public class ExamRepositoryImpl implements ExamRepository {
 		return updatedReport.getReportId();
 	}
 
+
 }
+
