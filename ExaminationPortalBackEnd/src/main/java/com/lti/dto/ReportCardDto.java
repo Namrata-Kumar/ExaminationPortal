@@ -1,6 +1,5 @@
 package com.lti.dto;
 
-import org.hibernate.annotations.ColumnDefault;
 
 public class ReportCardDto {
 	long reportId;

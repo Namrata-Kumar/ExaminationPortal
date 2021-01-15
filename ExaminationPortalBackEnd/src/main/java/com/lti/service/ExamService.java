@@ -31,7 +31,10 @@ public interface ExamService {
 
 	public List<ReportCard> viewAllReportCards();
 
-	public List<UserRegistration> findUsersByDetails(long courseId, int currentLevel);
+	public List<UserRegistration> findUsersByDetails(long courseId,String userState, String userCity, int level,
+			int fromRange, int toRange);
+	
+	//public List<UserRegistration> findUsersByDetailsNew(String userState, String userCity, int fromRange, int toRange);
 
 	public List<UserRegistration> viewAllUsers();
 	public ReportCard findReportBasedOnCourseAndUserId(long userId,long courseId);

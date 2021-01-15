@@ -5,7 +5,6 @@ import java.util.List;
 
 import java.util.Random;
 
-
 import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
 
@@ -27,7 +26,6 @@ import com.lti.dto.QuestionDto;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
 import com.lti.entity.ResetPassword;
-import com.lti.entity.UserLoginDetails;
 import com.lti.entity.UserRegistration;
 import com.lti.service.EmailService;
 
@@ -36,7 +34,7 @@ public class ExamRepositoryImpl implements ExamRepository {
 
 	@PersistenceContext
 	EntityManager em;
-	
+
 	@Autowired
 	EmailService emailService;
 
@@ -49,8 +47,8 @@ public class ExamRepositoryImpl implements ExamRepository {
 			query.setParameter("adminEmail", email);
 			System.out.println("after q");
 			AdminLoginDetails existingUser = query.getSingleResult();
-			System.out.println("after result"+existingUser.getAdminPassword());
-			
+			System.out.println("after result" + existingUser.getAdminPassword());
+
 			return existingUser.getAdminPassword().equals(password);
 
 		} catch (NoResultException noResultException) {
@@ -89,8 +87,6 @@ public class ExamRepositoryImpl implements ExamRepository {
 		// return newUser.getUserId();
 	}
 
-	
-
 	@Transactional
 	public boolean resetPassword(ResetPassword resetPassword) {
 		try {
@@ -98,7 +94,8 @@ public class ExamRepositoryImpl implements ExamRepository {
 			TypedQuery<UserRegistration> query = em.createQuery(sql, UserRegistration.class);
 			query.setParameter("userEmail", resetPassword.getUserEmail());
 			UserRegistration existingUser = query.getSingleResult();
-			if ((existingUser.getUserEmail().equals(resetPassword.getUserEmail())) && (resetPassword.getCode().equals(existingUser.getForgotPasswordLink())) ){
+			if ((existingUser.getUserEmail().equals(resetPassword.getUserEmail()))
+					&& (resetPassword.getCode().equals(existingUser.getForgotPasswordLink()))) {
 				String jpql = "UPDATE UserRegistration u SET u.userPassword=:userPassword WHERE u.userEmail=:userEmail";
 				Query query1 = em.createQuery(jpql);
 				query1.setParameter("userPassword", resetPassword.getConfirmPassword());
@@ -129,12 +126,13 @@ public class ExamRepositoryImpl implements ExamRepository {
 				query1.setParameter("code", code);
 				query1.setParameter("userEmail", forgotPassword.getUserEmail());
 				query1.executeUpdate();
-				// send email here	
-				  UserRegistration user = this.findUserByEmail(forgotPassword.getUserEmail());
-				  String subject = "Reset Password Link"; String email = user.getUserEmail();
-				  String text = "Hi " + user.getUserName() + "!! Your Password reset link is:"
-				  + "http://localhost:4200/resetpassword/"+code;
-				  emailService.sendEmailForPasswordReset(email, text, subject);
+				// send email here
+				UserRegistration user = this.findUserByEmail(forgotPassword.getUserEmail());
+				String subject = "Reset Password Link";
+				String email = user.getUserEmail();
+				String text = "Hi " + user.getUserName() + "!! Your Password reset link is:"
+						+ "http://localhost:4200/resetpassword/" + code;
+				emailService.sendEmailForPasswordReset(email, text, subject);
 				return true;
 			} else {
 				return false;
@@ -146,32 +144,30 @@ public class ExamRepositoryImpl implements ExamRepository {
 		}
 
 	}
-	
+
 	private String generateRandomString() {
-	    int leftLimit = 97; // letter 'a'
-	    int rightLimit = 122; // letter 'z'
-	    int targetStringLength = 20;
-	    Random random = new Random();
+		int leftLimit = 97; // letter 'a'
+		int rightLimit = 122; // letter 'z'
+		int targetStringLength = 20;
+		Random random = new Random();
 
-	    String generatedString = random.ints(leftLimit, rightLimit + 1)
-	      .limit(targetStringLength)
-	      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-	      .toString();
+		String generatedString = random.ints(leftLimit, rightLimit + 1).limit(targetStringLength)
+				.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
 
-	    return generatedString;
+		return generatedString;
 	}
 
-        @Transactional
+	@Transactional
 	public UserRegistration findUserByEmail(String userEmail) {
 		String sql = "SELECT u from UserRegistration u where u.userEmail=:userEmail";
 		try {
 			TypedQuery<UserRegistration> query = em.createQuery(sql, UserRegistration.class);
 			query.setParameter("userEmail", userEmail);
-			return query.getSingleResult();			
-		}catch (Exception e) {
+			return query.getSingleResult();
+		} catch (Exception e) {
 			return null;
 		}
-		
+
 	}
 
 	@Transactional
@@ -254,11 +250,49 @@ public class ExamRepositoryImpl implements ExamRepository {
 
 	}
 
+	/*
+	 * @Transactional public List<UserRegistration> findUsersByDetailsNew(String
+	 * userState, String userCity, int fromRange, int toRange) { try { String sql =
+	 * "select u from UserRegistration u inner join ReportCard r ON u.userId = r.userRegistration.userId"
+	 * +
+	 * " WHERE u.userState=:userState and u.userCity=:userCity and r.level2Score between :fromRange and :toRange"
+	 * ; TypedQuery<UserRegistration> query = em.createQuery(sql,
+	 * UserRegistration.class); query.setParameter("userState", userState);
+	 * query.setParameter("userCity", userCity); query.setParameter("fromRange",
+	 * fromRange); query.setParameter("toRange", toRange); List<UserRegistration>
+	 * users = query.getResultList(); return users; } catch (Exception e) {
+	 * e.printStackTrace(); return null; } }
+	 */
+
 	@Transactional
-	public List<UserRegistration> findUsersByDetails(long courseId, int currentLevel) {
+	public List<UserRegistration> findUsersByDetails(long courseId, String userState, String userCity, int level,
+			int fromRange, int toRange) {
+		try {
+			String sql;
+			if (level == 1) {
+				sql = "select u"
+						+ " from UserRegistration u inner join ReportCard r ON u.userId = r.userRegistration.userId"
+						+ " WHERE r.course.courseId=:courseId and u.userState=:userState and u.userCity=:userCity and r.level1Score BETWEEN :fromRange and :toRange";
+			} else if (level == 2) {
+				sql = "select u"
+						+ " from UserRegistration u inner join ReportCard r ON u.userId = r.userRegistration.userId"
+						+ " WHERE r.course.courseId=:courseId and u.userState=:userState and u.userCity=:userCity and r.level2Score BETWEEN :fromRange and :toRange";
+			} else {
+				return null;
+			}
 
-		return null;
+			TypedQuery<UserRegistration> query = em.createQuery(sql, UserRegistration.class);
+			query.setParameter("courseId", courseId);
+			query.setParameter("userState", userState);
+			query.setParameter("userCity", userCity);
+			query.setParameter("fromRange", fromRange);
+			query.setParameter("toRange", toRange);
+			return query.getResultList();
 
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Transactional
@@ -272,6 +306,7 @@ public class ExamRepositoryImpl implements ExamRepository {
 		}
 	}
 
+	@Transactional
 	public ReportCard findReportBasedOnCourseAndUserId(long userId, long courseId) {
 		String sql = "select r from ReportCard r where r.userRegistration.userId=:userId and r.course.courseId=:courseId";
 		try {
@@ -322,9 +357,5 @@ public class ExamRepositoryImpl implements ExamRepository {
 		ReportCard reportCard1 = em.merge(reportCard);
 		return reportCard1.getReportId();
 	}
-
-		}
-
-
 
 }

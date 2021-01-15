@@ -3,6 +3,8 @@ package com.lti.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.security.auth.message.callback.PrivateKeyCallback.Request;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,7 +24,6 @@ import com.lti.entity.ForgotPassword;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
 import com.lti.entity.ResetPassword;
-import com.lti.entity.UserCredentials;
 import com.lti.entity.UserRegistration;
 import com.lti.service.ExamService;
 
@@ -35,13 +36,13 @@ public class ExamController {
 
 	@GetMapping("/isValidUser/{uemail}/{upass}")
 	public boolean isValidUser(@PathVariable("uemail") String email, @PathVariable("upass") String password) {
-	System.out.println(email+password);
-	return examService.isValidUser(email, password);
+		System.out.println(email + password);
+		return examService.isValidUser(email, password);
 	}
 
 	@GetMapping("/isValidAdmin/{aemail}/{apass}")
 	public boolean isValidAdmin(@PathVariable("aemail") String email, @PathVariable("apass") String password) {
-	return examService.isValidAdmin(email, password);
+		return examService.isValidAdmin(email, password);
 	}
 
 	@PostMapping(value = "/register")
@@ -51,16 +52,15 @@ public class ExamController {
 
 	@PostMapping(value = "/resetPassword")
 	public boolean resetPassword(@RequestBody ResetPassword resetPassword) {
-		 return examService.resetPassword(resetPassword);
+		return examService.resetPassword(resetPassword);
 	}
-	
-	@PostMapping(value="/forgotPassword")
+
+	@PostMapping(value = "/forgotPassword")
 	public boolean forgotPassword(@RequestBody ForgotPassword forgotPassword) {
 		return examService.forgotPassword(forgotPassword);
 	}
 
-	@GetMapping(value = "/fetchExamQuestions/{currentLevel}/{courseId}", produces = { MediaType.APPLICATION_XML_VALUE,
-			MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/fetchExamQuestions/{currentLevel}/{courseId}")
 	public List<QuestionDto> fetchExamQuestions(@PathVariable("currentLevel") int currentLevel,
 			@PathVariable("courseId") long courseId) {
 		List<Question> questions = examService.fetchExamQuestions(currentLevel, courseId);
@@ -100,30 +100,43 @@ public class ExamController {
 		return examService.addQuestion(question);
 	}
 
-	@PostMapping(value = "/removeQuestion", consumes = { MediaType.APPLICATION_XML_VALUE,
-			MediaType.APPLICATION_JSON_VALUE })
+	@PostMapping(value = "/removeQuestion")
 	public long removeQuestion(@RequestParam("questionId") long questionId) {
 		return examService.removeQuestion(questionId);
 
 	}
 
-	@RequestMapping(value = "/viewAllReportCards", method = RequestMethod.GET, produces = {
-			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(value = "/viewAllReportCards")
 	public List<ReportCard> viewAllReportCards() {
 		return examService.viewAllReportCards();
 	}
 
-	public List<UserRegistration> findUsersByDetails(@PathVariable long courseId, @PathVariable int currentLevel) {
-		return null;
+	@GetMapping(value = "/findUsersByDetails")
+	public List<UserRegistration> findUsersByDetails(@RequestParam("courseId") long courseId,
+			@RequestParam("userState") String userState, @RequestParam("userCity") String userCity,
+			@RequestParam("level") int level, @RequestParam("fromRange") int fromRange,
+			@RequestParam("toRange") int toRange) {
+		return examService.findUsersByDetails(courseId, userState, userCity, level, fromRange, toRange);
 	}
+	
+	/*
+	 * @GetMapping(value = "/findUsersByDetailsNew") public List<UserRegistration>
+	 * findUsersByDetailNew(
+	 * 
+	 * @RequestParam("userState") String userState, @RequestParam("userCity") String
+	 * userCity,
+	 * 
+	 * @RequestParam("fromRange") int fromRange, @RequestParam("toRange") int
+	 * toRange) { return examService.findUsersByDetailsNew(userState, userCity,
+	 * fromRange, toRange); }
+	 */
 
 	@RequestMapping(value = "/viewAllUsers", method = RequestMethod.GET)
 	public List<UserRegistration> viewAllUsers() {
 		return examService.viewAllUsers();
 	}
 
-	@GetMapping(value = "/findReport/{userId}/{courseId}", produces = { MediaType.APPLICATION_XML_VALUE,
-			MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/findReport/{userId}/{courseId}")
 	public ReportCard findReportBasedOnCourseAndUserId(@PathVariable("userId") long userId,
 			@PathVariable("courseId") long courseId) {
 		ReportCard reportCard = examService.findReportBasedOnCourseAndUserId(userId, courseId);
@@ -140,11 +153,5 @@ public class ExamController {
 	public long addNewReport(@RequestBody NewReport newReport) {
 		return examService.addNewReport(newReport);
 	}
-	
-	@PostMapping(value = "/addNewReport")
-	public long addNewReport(@RequestBody NewReport newReport) {
-		return examService.addNewReport(newReport);
-	}
-
 
 }
