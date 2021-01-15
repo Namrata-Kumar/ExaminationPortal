@@ -98,12 +98,11 @@ public class ExamController {
 	}
 
 	@PostMapping(value = "/addQuestion")
-	public long addQuestion(@RequestBody Question question) {
+	public long addQuestion(@RequestBody QuestionDto question) {
 		return examService.addQuestion(question);
 	}
 
-	@PostMapping(value = "/removeQuestion", consumes = { MediaType.APPLICATION_XML_VALUE,
-			MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/removeQuestion")
 	public long removeQuestion(@RequestParam("questionId") long questionId) {
 		return examService.removeQuestion(questionId);
 

@@ -28,7 +28,7 @@ public interface ExamRepository {
 
 	public int displayScoreByLevelandId(int examLevel, long userId, long courseId);
 
-	public long addQuestion(Question question);
+	public long addQuestion(QuestionDto question);
 
 	public long removeQuestion(long questionId);
 

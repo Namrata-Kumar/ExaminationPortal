@@ -62,7 +62,7 @@ public class ExamServiceImpl implements ExamService {
 	}
 
 	@Override
-	public long addQuestion(Question question) {
+	public long addQuestion(QuestionDto question) {
 
 		return examRepository.addQuestion(question);
 
