@@ -1,23 +1,14 @@
 package com.lti.entity;
 
-import java.util.List;
-
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.ColumnDefault;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.lti.dto.LevelScore;
 
 @Entity
 @Table(name = "table_report")
@@ -37,12 +28,12 @@ public class ReportCard {
 
 	int status;
 
-	@ManyToOne
+	@ManyToOne()
 	@JsonIgnore
 	@JoinColumn(name = "courseId")
 	Course course;
 
-	@ManyToOne
+	@ManyToOne()
 	@JsonIgnore
 	@JoinColumn(name = "userId")
 	UserRegistration userRegistration;

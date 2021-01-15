@@ -85,10 +85,17 @@ public class ExamServiceImpl implements ExamService {
 	}
 
 	@Override
-	public List<UserRegistration> findUsersByDetails(long courseId, int currentLevel) {
-
-		return null;
+	public List<UserRegistration> findUsersByDetails(long courseId,String userState, String userCity, int level,
+			int fromRange, int toRange) {
+	return examRepository.findUsersByDetails(courseId,userState, userCity, level, fromRange, toRange);
 	}
+	
+	/*
+	 * @Override public List<UserRegistration> findUsersByDetailsNew(String
+	 * userState, String userCity, int fromRange, int toRange){ return
+	 * examRepository.findUsersByDetailsNew(userState, userCity, fromRange,
+	 * toRange); }
+	 */
 
 	@Override
 	public List<UserRegistration> viewAllUsers() {
@@ -96,15 +103,18 @@ public class ExamServiceImpl implements ExamService {
 		return examRepository.viewAllUsers();
 	}
 
+	@Override
 	public ReportCard findReportBasedOnCourseAndUserId(long userId, long courseId) {
 		return examRepository.findReportBasedOnCourseAndUserId(userId, courseId);
 
 	}
 
+	@Override
 	public List<Course> fetchAllCourses() {
 		return examRepository.fetchAllCourses();
 	}
 
+	@Override
 	public long addNewReport(NewReport newReport) {
 		return examRepository.addNewReport(newReport);
 
