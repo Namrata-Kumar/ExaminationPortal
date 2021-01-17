@@ -161,4 +161,10 @@ public class ExamController {
 
 	}
 
+	@GetMapping(value = "reportByUserId/{userId}")
+	public List<ReportCardDto> viewReportsByUserId(@PathVariable("userId") long userId) {
+		System.out.println("in controller");
+		return examService.viewReportsByUserId(userId);
+	}
+
 }
