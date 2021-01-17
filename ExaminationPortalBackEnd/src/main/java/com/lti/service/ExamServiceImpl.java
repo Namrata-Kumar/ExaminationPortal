@@ -129,5 +129,11 @@ public class ExamServiceImpl implements ExamService {
 	public long  updateExistingReport(ReportCardDto reportCard) {
 		return examRepository.updateExistingReport(reportCard);
 	}
+	
+	public List<ReportCardDto> viewReportsByUserId(long userId){
+		System.out.println("in service");
+		return examRepository.viewReportsByUserId(userId);
+	}
+
 
 }

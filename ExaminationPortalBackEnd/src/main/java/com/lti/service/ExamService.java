@@ -53,4 +53,6 @@ public interface ExamService {
 	public boolean forgotPassword(ForgotPassword forgotPassword);
 
 	public long updateExistingReport(ReportCardDto reportCard);
+	
+	public List<ReportCardDto> viewReportsByUserId(long userId);
 }

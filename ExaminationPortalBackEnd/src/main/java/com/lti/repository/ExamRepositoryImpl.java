@@ -238,7 +238,11 @@ public class ExamRepositoryImpl implements ExamRepository {
 
 	@Transactional
 	public long removeQuestion(long questionId) {
+
 		Question question = em.find(Question.class, questionId);
+		if (question == null) {
+			return 0;
+		}
 		em.remove(question);
 		return question.getQuestionId();
 	}
@@ -356,6 +360,30 @@ public class ExamRepositoryImpl implements ExamRepository {
 		report.setStatus(reportCard.getStatus());
 		ReportCard updatedReport = em.merge(report);
 		return updatedReport.getReportId();
+	}
+
+	@Transactional
+	public List<ReportCardDto> viewReportsByUserId(long userId) {
+		System.out.println("In repo");
+		List<ReportCardDto> reportCards = new ArrayList<>();
+		String jpql = "select r from ReportCard r where  r.userRegistration.userId=:userId";
+		TypedQuery<ReportCard> query = em.createQuery(jpql, ReportCard.class);
+		query.setParameter("userId", userId);
+		List<ReportCard> reports = query.getResultList();
+		for (ReportCard report : reports) {
+			ReportCardDto reportDto = new ReportCardDto();
+			reportDto.setReportId(report.getReportId());
+			reportDto.setLevel1Score(report.getLevel1Score());
+			reportDto.setLevel2Score(report.getLevel2Score());
+			reportDto.setLevel3Score(report.getLevel3Score());
+			reportDto.setStatus(report.getStatus());
+			reportDto.setCourseId(report.getCourse().getCourseId());
+			reportDto.setUserId(report.getUserRegistration().getUserId());
+			reportDto.setCurrentLevel(report.getCurrentLevel());
+
+			reportCards.add(reportDto);
+		}
+		return reportCards;
 	}
 
 }
