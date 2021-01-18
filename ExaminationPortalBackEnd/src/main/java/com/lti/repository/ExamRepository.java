@@ -54,5 +54,7 @@ public interface ExamRepository {
 	public UserRegistration findUserByEmail(String userEmail);
 
 	public long  updateExistingReport(ReportCardDto reportCard);
+}
+
 
 
