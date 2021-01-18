@@ -4,14 +4,15 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.lti.dto.ForgotPassword;
 import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
 import com.lti.dto.ReportCardDto;
+import com.lti.dto.ResetPassword;
+import com.lti.dto.UserByDetails;
 import com.lti.entity.Course;
-import com.lti.entity.ForgotPassword;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
-import com.lti.entity.ResetPassword;
 import com.lti.entity.UserRegistration;
 
 public interface ExamService {
@@ -34,7 +35,7 @@ public interface ExamService {
 
 	public List<ReportCard> viewAllReportCards();
 
-	public List<UserRegistration> findUsersByDetails(long courseId,String userState, String userCity, int level,
+	public List<UserByDetails> findUsersByDetails(long courseId,String userState, String userCity, int level,
 			int fromRange, int toRange);
 	
 	//public List<UserRegistration> findUsersByDetailsNew(String userState, String userCity, int fromRange, int toRange);

@@ -2,14 +2,15 @@ package com.lti.repository;
 
 import java.util.List;
 
+import com.lti.dto.ForgotPassword;
 import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
 import com.lti.dto.ReportCardDto;
+import com.lti.dto.ResetPassword;
+import com.lti.dto.UserByDetails;
 import com.lti.entity.Course;
-import com.lti.entity.ForgotPassword;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
-import com.lti.entity.ResetPassword;
 import com.lti.entity.UserRegistration;
 
 public interface ExamRepository {
@@ -32,10 +33,11 @@ public interface ExamRepository {
 
 	public List<ReportCard> viewAllReportCards();
 
-	public List<UserRegistration> findUsersByDetails(long courseId,String userState, String userCity, int level,
+	public List<UserByDetails> findUsersByDetails(long courseId, String userState, String userCity, int level,
 			int fromRange, int toRange);
-	
-	//public List<UserRegistration> findUsersByDetailsNew(String userState, String userCity, int fromRange, int toRange);
+
+	// public List<UserRegistration> findUsersByDetailsNew(String userState, String
+	// userCity, int fromRange, int toRange);
 
 	public List<UserRegistration> viewAllUsers();
 
@@ -53,7 +55,7 @@ public interface ExamRepository {
 
 	public UserRegistration findUserByEmail(String userEmail);
 
-	public long  updateExistingReport(ReportCardDto reportCard);
+	public long updateExistingReport(ReportCardDto reportCard);
+
 	public List<ReportCardDto> viewReportsByUserId(long userId);
-
-
+}

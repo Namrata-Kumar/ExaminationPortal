@@ -6,9 +6,12 @@ import java.util.List;
 
 import java.util.Random;
 
+import com.lti.dto.ForgotPassword;
 import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
 import com.lti.dto.ReportCardDto;
+import com.lti.dto.ResetPassword;
+import com.lti.dto.UserByDetails;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -24,11 +27,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.lti.entity.AdminLoginDetails;
 import com.lti.entity.Course;
-import com.lti.entity.ForgotPassword;
 import com.lti.dto.QuestionDto;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
-import com.lti.entity.ResetPassword;
 import com.lti.entity.UserRegistration;
 import com.lti.service.EmailService;
 
@@ -79,16 +80,21 @@ public class ExamRepositoryImpl implements ExamRepository {
 
 	@Transactional
 	public UserRegistration registerUser(UserRegistration user) {
-		String sql = "select u from UserRegistration u where u.userEmail=:userEmail";
-		TypedQuery<UserRegistration> query = em.createQuery(sql, UserRegistration.class);
-		query.setParameter("userEmail", user.getUserEmail());
-		List<UserRegistration> existingUserRegistrations = query.getResultList();
-		if (existingUserRegistrations.isEmpty()) {
-			UserRegistration newUser = em.merge(user);
-			return newUser;
+		if (user.getUserName() != null && user.getDateOfBirth() != null && user.getQualification() != null
+				&& user.getUserCity() != null && user.getUserState() != null && user.getUserPhone() != null
+				&& user.getYearOfCompletion() != null && user.getUserEmail() != null
+				&& user.getUserPassword() != null) {
+			String sql = "select u from UserRegistration u where u.userEmail=:userEmail";
+			TypedQuery<UserRegistration> query = em.createQuery(sql, UserRegistration.class);
+			query.setParameter("userEmail", user.getUserEmail());
+			List<UserRegistration> existingUserRegistrations = query.getResultList();
+			if (existingUserRegistrations.isEmpty()) {
+				UserRegistration newUser = em.merge(user);
+				return newUser;
+			}
 		}
 		return null;
-		// return newUser.getUserId();
+
 	}
 
 	@Transactional
@@ -284,8 +290,9 @@ public class ExamRepositoryImpl implements ExamRepository {
 	 */
 
 	@Transactional
-	public List<UserRegistration> findUsersByDetails(long courseId, String userState, String userCity, int level,
+	public List<UserByDetails> findUsersByDetails(long courseId, String userState, String userCity, int level,
 			int fromRange, int toRange) {
+		List<UserByDetails> userDetails = new ArrayList<>();
 		try {
 			String sql;
 			if (level == 1) {
@@ -306,7 +313,19 @@ public class ExamRepositoryImpl implements ExamRepository {
 			query.setParameter("userCity", userCity);
 			query.setParameter("fromRange", fromRange);
 			query.setParameter("toRange", toRange);
-			return query.getResultList();
+			List<UserRegistration> users = query.getResultList();
+			for (UserRegistration user : users) {
+				UserByDetails details = new UserByDetails();
+				details.setUserName(user.getUserName());
+				details.setUserEmail(user.getUserEmail());
+				details.setUserPhone(user.getUserPhone());
+				details.setUserCity(user.getUserCity());
+				details.setUserState(user.getUserState());
+
+				userDetails.add(details);
+
+			}
+			return userDetails;
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -376,13 +395,6 @@ public class ExamRepositoryImpl implements ExamRepository {
 		ReportCard reportCard1 = em.merge(reportCard);
 		return reportCard1.getReportId();
 	}
-  
-	@Override
-	public long updatePassword(long userId, String userPassword) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 
 	@Transactional
 	public long updateExistingReport(ReportCardDto reportCard) {
@@ -426,4 +438,3 @@ public class ExamRepositoryImpl implements ExamRepository {
 	}
 
 }
-

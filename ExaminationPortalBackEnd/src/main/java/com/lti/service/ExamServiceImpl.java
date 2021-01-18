@@ -7,15 +7,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.lti.entity.Course;
-import com.lti.entity.ForgotPassword;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
-import com.lti.entity.ResetPassword;
 import com.lti.entity.UserRegistration;
 import com.lti.repository.ExamRepository;
+import com.lti.dto.ForgotPassword;
 import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
 import com.lti.dto.ReportCardDto;
+import com.lti.dto.ResetPassword;
+import com.lti.dto.UserByDetails;
 
 @Service
 public class ExamServiceImpl implements ExamService {
@@ -85,7 +86,7 @@ public class ExamServiceImpl implements ExamService {
 	}
 
 	@Override
-	public List<UserRegistration> findUsersByDetails(long courseId,String userState, String userCity, int level,
+	public List<UserByDetails> findUsersByDetails(long courseId,String userState, String userCity, int level,
 			int fromRange, int toRange) {
 	return examRepository.findUsersByDetails(courseId,userState, userCity, level, fromRange, toRange);
 	}
