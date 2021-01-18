@@ -6,9 +6,11 @@ import java.util.List;
 
 import java.util.Random;
 
+import com.lti.dto.ForgotPassword;
 import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
 import com.lti.dto.ReportCardDto;
+import com.lti.dto.ResetPassword;
 import com.lti.dto.UserByDetails;
 
 import javax.persistence.EntityManager;
@@ -25,11 +27,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.lti.entity.AdminLoginDetails;
 import com.lti.entity.Course;
-import com.lti.entity.ForgotPassword;
 import com.lti.dto.QuestionDto;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
-import com.lti.entity.ResetPassword;
 import com.lti.entity.UserRegistration;
 import com.lti.service.EmailService;
 

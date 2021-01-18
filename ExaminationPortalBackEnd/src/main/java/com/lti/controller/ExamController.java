@@ -18,15 +18,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lti.dto.ForgotPassword;
 import com.lti.dto.NewReport;
 import com.lti.dto.QuestionDto;
 import com.lti.dto.ReportCardDto;
+import com.lti.dto.ResetPassword;
 import com.lti.dto.UserByDetails;
 import com.lti.entity.Course;
-import com.lti.entity.ForgotPassword;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
-import com.lti.entity.ResetPassword;
 import com.lti.entity.UserRegistration;
 import com.lti.service.ExamService;
 
@@ -37,7 +37,7 @@ public class ExamController {
 	@Autowired
 	ExamService examService;
 
-@GetMapping("/isValidUser/{uemail}/{upass}")
+	@GetMapping("/isValidUser/{uemail}/{upass}")
 	public long isValidUser(@PathVariable("uemail") String email, @PathVariable("upass") String password) {
 		System.out.println(email + password);
 		return examService.isValidUser(email, password);
@@ -103,7 +103,7 @@ public class ExamController {
 		return examService.addQuestion(question);
 	}
 
-@GetMapping(value = "/removeQuestion")
+	@GetMapping(value = "/removeQuestion")
 	public long removeQuestion(@RequestParam("questionId") long questionId) {
 		return examService.removeQuestion(questionId);
 	}
@@ -120,7 +120,7 @@ public class ExamController {
 			@RequestParam("toRange") int toRange) {
 		return examService.findUsersByDetails(courseId, userState, userCity, level, fromRange, toRange);
 	}
-	
+
 	/*
 	 * @GetMapping(value = "/findUsersByDetailsNew") public List<UserRegistration>
 	 * findUsersByDetailNew(
@@ -150,8 +150,8 @@ public class ExamController {
 	public List<Course> fetchAllCourses() {
 		return examService.fetchAllCourses();
 	}
-  
-@PostMapping(value = "/addNewReport")
+
+	@PostMapping(value = "/addNewReport")
 	public long addNewReport(@RequestBody NewReport newReport) {
 		return examService.addNewReport(newReport);
 	}

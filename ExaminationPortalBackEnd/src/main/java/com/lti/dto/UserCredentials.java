@@ -1,4 +1,4 @@
-package com.lti.entity;
+package com.lti.dto;
 public class UserCredentials {
     String email;
     String password;
