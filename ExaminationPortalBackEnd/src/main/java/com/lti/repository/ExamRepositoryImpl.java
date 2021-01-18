@@ -29,7 +29,6 @@ import com.lti.dto.QuestionDto;
 import com.lti.entity.Question;
 import com.lti.entity.ReportCard;
 import com.lti.entity.ResetPassword;
-import com.lti.entity.UserLoginDetails;
 import com.lti.entity.UserRegistration;
 import com.lti.service.EmailService;
 
@@ -270,11 +269,49 @@ public class ExamRepositoryImpl implements ExamRepository {
 
 	}
 
+	/*
+	 * @Transactional public List<UserRegistration> findUsersByDetailsNew(String
+	 * userState, String userCity, int fromRange, int toRange) { try { String sql =
+	 * "select u from UserRegistration u inner join ReportCard r ON u.userId = r.userRegistration.userId"
+	 * +
+	 * " WHERE u.userState=:userState and u.userCity=:userCity and r.level2Score between :fromRange and :toRange"
+	 * ; TypedQuery<UserRegistration> query = em.createQuery(sql,
+	 * UserRegistration.class); query.setParameter("userState", userState);
+	 * query.setParameter("userCity", userCity); query.setParameter("fromRange",
+	 * fromRange); query.setParameter("toRange", toRange); List<UserRegistration>
+	 * users = query.getResultList(); return users; } catch (Exception e) {
+	 * e.printStackTrace(); return null; } }
+	 */
+
 	@Transactional
-	public List<UserRegistration> findUsersByDetails(long courseId, int currentLevel) {
+	public List<UserRegistration> findUsersByDetails(long courseId, String userState, String userCity, int level,
+			int fromRange, int toRange) {
+		try {
+			String sql;
+			if (level == 1) {
+				sql = "select u"
+						+ " from UserRegistration u inner join ReportCard r ON u.userId = r.userRegistration.userId"
+						+ " WHERE r.course.courseId=:courseId and u.userState=:userState and u.userCity=:userCity and r.level1Score BETWEEN :fromRange and :toRange";
+			} else if (level == 2) {
+				sql = "select u"
+						+ " from UserRegistration u inner join ReportCard r ON u.userId = r.userRegistration.userId"
+						+ " WHERE r.course.courseId=:courseId and u.userState=:userState and u.userCity=:userCity and r.level2Score BETWEEN :fromRange and :toRange";
+			} else {
+				return null;
+			}
 
-		return null;
+			TypedQuery<UserRegistration> query = em.createQuery(sql, UserRegistration.class);
+			query.setParameter("courseId", courseId);
+			query.setParameter("userState", userState);
+			query.setParameter("userCity", userCity);
+			query.setParameter("fromRange", fromRange);
+			query.setParameter("toRange", toRange);
+			return query.getResultList();
 
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Transactional
@@ -288,6 +325,7 @@ public class ExamRepositoryImpl implements ExamRepository {
 		}
 	}
 
+	@Transactional
 	public ReportCard findReportBasedOnCourseAndUserId(long userId, long courseId) {
 		String sql = "select r from ReportCard r where r.userRegistration.userId=:userId and r.course.courseId=:courseId";
 		try {
@@ -338,12 +376,13 @@ public class ExamRepositoryImpl implements ExamRepository {
 		ReportCard reportCard1 = em.merge(reportCard);
 		return reportCard1.getReportId();
 	}
-
+  
 	@Override
 	public long updatePassword(long userId, String userPassword) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
 
 	@Transactional
 	public long updateExistingReport(ReportCardDto reportCard) {
@@ -387,3 +426,4 @@ public class ExamRepositoryImpl implements ExamRepository {
 	}
 
 }
+

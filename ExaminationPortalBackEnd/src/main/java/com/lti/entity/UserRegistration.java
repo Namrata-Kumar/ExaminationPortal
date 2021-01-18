@@ -16,8 +16,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "table_userRegistration")
 public class UserRegistration {
-    
-	
+
 	@Id
 	@SequenceGenerator(name = "seq_user", initialValue = 1001, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_user")
@@ -32,10 +31,7 @@ public class UserRegistration {
 	String qualification;
 	String yearOfCompletion;
 	String forgotPasswordLink;
-	 
-	@OneToOne(mappedBy = "userRegistration",cascade = CascadeType.ALL)
-	UserLoginDetails userLoginDetails;
-	
+
 	@OneToMany(mappedBy = "userRegistration")
 	List<ReportCard> reportCard;
 
@@ -119,14 +115,6 @@ public class UserRegistration {
 		this.yearOfCompletion = yearOfCompletion;
 	}
 
-	public UserLoginDetails getUserLoginDetails() {
-		return userLoginDetails;
-	}
-
-	public void setUserLoginDetails(UserLoginDetails userLoginDetails) {
-		this.userLoginDetails = userLoginDetails;
-	}
-
 	public List<ReportCard> getReportCard() {
 		return reportCard;
 	}
@@ -142,11 +130,8 @@ public class UserRegistration {
 	public void setForgotPasswordLink(String forgotPasswordLink) {
 		this.forgotPasswordLink = forgotPasswordLink;
 	}
-	
-	
-	
-}
 
+}
 
 // "userName":"meghana",
 // "userEmail":"meg@lti",

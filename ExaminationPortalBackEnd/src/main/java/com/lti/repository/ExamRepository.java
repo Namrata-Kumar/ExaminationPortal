@@ -20,8 +20,6 @@ public interface ExamRepository {
 
 	public UserRegistration registerUser(UserRegistration user);
 
-	public long updatePassword(long userId, String userPassword);
-
 	public List<Question> fetchExamQuestions(int currentLevel, long courseId);
 
 	public long updateReportCard();
@@ -34,7 +32,10 @@ public interface ExamRepository {
 
 	public List<ReportCard> viewAllReportCards();
 
-	public List<UserRegistration> findUsersByDetails(long courseId, int currentLevel);
+	public List<UserRegistration> findUsersByDetails(long courseId,String userState, String userCity, int level,
+			int fromRange, int toRange);
+	
+	//public List<UserRegistration> findUsersByDetailsNew(String userState, String userCity, int fromRange, int toRange);
 
 	public List<UserRegistration> viewAllUsers();
 
@@ -55,4 +56,4 @@ public interface ExamRepository {
 	public long  updateExistingReport(ReportCardDto reportCard);
 	public List<ReportCardDto> viewReportsByUserId(long userId);
 
-}
+
