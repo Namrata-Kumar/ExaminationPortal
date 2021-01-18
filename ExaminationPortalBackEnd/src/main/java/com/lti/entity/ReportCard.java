@@ -17,7 +17,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.lti.dto.LevelScore;
 
 @Entity
 @Table(name = "table_report")
